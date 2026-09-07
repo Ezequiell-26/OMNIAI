@@ -5,7 +5,7 @@
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "d6208fef45db0af8acc69aed77274ba2bcfc44db",
+  "lastKnownMainHead": "d45c4e4369fbed0aa72eca237945cced43339ca1",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
@@ -42,6 +42,8 @@
     "portableExecutionAdapters": true,
     "toolRegistry": true,
     "boundedAgentExecutionLoop": true,
+    "toolSafetyDefaults": true,
+    "toolTimeouts": true,
     "architectureGuard": true,
     "coreTests": true,
     "persistentAIMemory": true,
@@ -101,8 +103,8 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "mainHead": "d6208fef45db0af8acc69aed77274ba2bcfc44db",
-    "change": "Finalized the permanent multi-AI contributor standard: main-only integration, professional open-source research with MIT preference for equivalent source reuse, current upstream verification, license discipline, evidence-based completion, persistent handoff and CI enforcement.",
+    "mainHead": "d45c4e4369fbed0aa72eca237945cced43339ca1",
+    "change": "Hardened ToolRegistry defaults: read-only file tools no longer require approval by default; mutating capabilities remain approval-gated; tool timeouts propagate cancellation signals; regression coverage added and wired into the core test command.",
     "nextExtensionPoint": "Connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
     "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
