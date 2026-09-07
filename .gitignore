@@ -63,3 +63,4 @@ worklog.md
 upload/
 download/*
 !download/README.md
+tool-results/
