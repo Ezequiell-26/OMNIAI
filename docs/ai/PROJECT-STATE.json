@@ -5,7 +5,7 @@
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "25feef026dc418c887c07a4dd2e45c14cc751805",
+  "lastKnownMainHead": "3a85821c082868d1b75b2bc457466ebd8245e02f",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
@@ -45,7 +45,8 @@
     "architectureGuard": true,
     "coreTests": true,
     "persistentAIMemory": true,
-    "AIEngineeringStandard": true
+    "AIEngineeringStandard": true,
+    "aiContextCIEnforcement": true
   },
   "partial": {
     "eventBus": "typed in Core; full durable event store and surface streaming still pending",
@@ -100,8 +101,8 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "mainHead": "25feef026dc418c887c07a4dd2e45c14cc751805",
-    "change": "Strengthened the permanent AI contributor brain: main-only integration, professional open-source research standard, currentness/license verification, evidence-based completion, and continuous multi-AI handoff.",
+    "mainHead": "3a85821c082868d1b75b2bc457466ebd8245e02f",
+    "change": "Strengthened the permanent AI contributor brain: main-only product integration, professional open-source research and MIT preference for equivalent source reuse, current upstream verification, license discipline, evidence-based completion, persistent multi-AI handoff, and CI enforcement.",
     "nextExtensionPoint": "Connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
     "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
