@@ -102,16 +102,26 @@ Never describe one of these as complete merely because contracts or UI exist.
 ### Surfaces
 
 - `src/app/` and related components — current Web application.
-- `windows-app` branch — valuable Windows/UI/streaming implementation history; do not merge blindly.
-- `web` branch — valuable web implementation history; do not merge blindly.
+- `windows-app` branch — historical/experimental Windows implementation; useful code may be ported into `main`, but it is NOT a second product source and must never become a competing integration branch.
+- `web` branch — historical/experimental implementation; useful code may be ported into `main`, but it is NOT a second product source and must never become a competing integration branch.
 
-## 6. Existing branch strategy
+## 6. Canonical Git strategy — MAIN ONLY
 
-`main` is canonical and must receive final changes.
+`main` is the only official development, integration, testing and release source for OMNIAI.
 
-`web` and `windows-app` are divergent histories. Preserve their useful behavior by extracting functionality into Core/adapters rather than replacing `main` wholesale.
+Every AI session must:
 
-Do not force-push or delete branches. Existing backup branches are deliberate recovery points.
+1. inspect the current `main` HEAD;
+2. make the smallest safe change that advances the product;
+3. integrate useful historical functionality into `main` rather than maintaining parallel product branches;
+4. commit completed work to `main`;
+5. verify the new `main` HEAD and update the persistent handoff/state.
+
+No completed feature is considered delivered while it exists only on `web`, `windows-app`, or a temporary feature branch.
+
+Do not force-push, reset, or overwrite unrelated `main` history. Do not delete historical branches as a shortcut for consolidation; they are recovery/reference sources unless explicitly removed by the repository owner.
+
+When a branch contains valuable work, compare it against `main`, port the capability into the canonical architecture, run regression checks, and then treat the branch as historical.
 
 ## 7. Safety model
 
@@ -143,6 +153,8 @@ Preferred behavior:
 `PRESERVAR > BORRAR`
 
 `CORE ÚNICO > IMPLEMENTACIONES PARALELAS`
+
+`MAIN > RAMAS EXPERIMENTALES`
 
 `SEGURIDAD > VELOCIDAD`
 
