@@ -2,6 +2,16 @@
 
 > Cliente web de IA **BYOK** (Bring Your Own Key) y **Local-First**. Tus claves y tu historial nunca salen de tu navegador, salvo que decidas crear una cuenta para sincronizar.
 
+## 🌿 Ramas (dónde trabajar)
+
+| Rama | Proyecto | IA trabaja aquí en |
+|---|---|---|
+| [`web`](https://github.com/Ezequiell-26/OMNIAI/tree/web) | **OmniAI Studio** — web Next.js | features de la web |
+| [`windows-app`](https://github.com/Ezequiell-26/OMNIAI/tree/windows-app) | **App de Windows** | features de la app de escritorio |
+| `main` | README + integración | solo merges/documentación |
+
+**Regla para IAs/contribuidores:** los cambios de la web van a `web`, los de la app de escritorio a `windows-app`. `main` recibe merges estables.
+
 ![Next.js](https://img.shields.io/badge/Next.js-16-black) ![React](https://img.shields.io/badge/React-19-61dafb) ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## ✨ Características
