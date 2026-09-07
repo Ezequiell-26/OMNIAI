@@ -1,0 +1,1 @@
+ test de sincronización bidireccional
