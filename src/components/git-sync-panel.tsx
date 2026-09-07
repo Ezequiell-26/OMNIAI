@@ -26,9 +26,6 @@ import {
   TriangleAlert,
 } from 'lucide-react'
 
-const SYNC_PORT = 3031
-const svc = (path: string) => `${path}?XTransformPort=${SYNC_PORT}`
-
 interface SyncResult {
   ok: boolean
   action: 'push' | 'pull' | 'rebase-push' | 'noop' | 'auto-commit-push' | 'error' | string
@@ -78,7 +75,7 @@ export function GitSyncPanel() {
 
   const loadStatus = useCallback(async () => {
     try {
-      const res = await fetch(svc('/status'), { cache: 'no-store' })
+      const res = await fetch('/api/git-sync/status', { cache: 'no-store' })
       if (!res.ok) return
       const data = (await res.json()) as SyncStatus
       if (mounted.current) setStatus(data)
@@ -102,7 +99,7 @@ export function GitSyncPanel() {
   const syncNow = async () => {
     setBusy(true)
     try {
-      await fetch(svc('/sync'), { method: 'POST' })
+      await fetch('/api/git-sync/sync', { method: 'POST' })
       await loadStatus()
     } finally {
       setBusy(false)
@@ -111,7 +108,7 @@ export function GitSyncPanel() {
 
   const setAutoCommit = async (value: boolean) => {
     try {
-      await fetch(svc('/config'), {
+      await fetch('/api/git-sync/config', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ autoCommit: value }),
