@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,45 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ── Cuentas (opcional, Local-First primero) ────────────────────────────────
+// La app funciona 100 % sin cuenta: esto solo habilita la sincronización
+// opcional del historial entre dispositivos.
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  sessions     Session[]
+  conversations CloudConversation[]
 }
 
-model Post {
+model Session {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// Copia en la nube de una conversación local (merge last-write-wins).
+model CloudConversation {
+  id        String   @id // mismo UUID que la copia local del navegador
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  mode      String   @default("single")
+  modelA    String
+  modelB    String?
+  messages  String // JSON serializado (messagesA + messagesB)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  @@unique([userId, id])
+  @@index([userId, updatedAt])
 }

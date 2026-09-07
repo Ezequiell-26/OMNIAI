@@ -1,34 +1,39 @@
 'use client';
 
 /**
- * StudioHeader — barra superior con logo, selector(es) de modelo,
- * toggle de split-view, nueva conversación y ajustes BYOK.
+ * StudioHeader — barra superior v2: logo, selector(es) de modelo,
+ * split-view, paleta de comandos (⌘K), nueva conversación, cuenta y ajustes.
  */
 
-import {
-  Columns2,
-  Menu,
-  MessagesSquare,
-  Settings2,
-  Sparkles,
-} from 'lucide-react';
+import { Columns2, Menu, MessagesSquare, Search, Settings2, Sparkles, UserRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ModelSelector } from '@/components/chat/model-selector';
 import { useSettingsStore } from '@/lib/store/use-settings-store';
+import { useAuthStore } from '@/lib/store/use-auth-store';
 
 interface StudioHeaderProps {
   onMenuClick: () => void;
   onOpenSettings: () => void;
+  onOpenAccount: () => void;
+  onOpenPalette: () => void;
   onNewChat: () => void;
 }
 
-export function StudioHeader({ onMenuClick, onOpenSettings, onNewChat }: StudioHeaderProps) {
+export function StudioHeader({
+  onMenuClick,
+  onOpenSettings,
+  onOpenAccount,
+  onOpenPalette,
+  onNewChat,
+}: StudioHeaderProps) {
   const splitMode = useSettingsStore((s) => s.splitMode);
   const toggleSplitMode = useSettingsStore((s) => s.toggleSplitMode);
   const panelA = useSettingsStore((s) => s.panelA);
   const panelB = useSettingsStore((s) => s.panelB);
   const setPanelSelection = useSettingsStore((s) => s.setPanelSelection);
+
+  const user = useAuthStore((s) => s.user);
 
   return (
     <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border/40 bg-background/80 px-3 backdrop-blur-xl md:px-4">
@@ -89,6 +94,29 @@ export function StudioHeader({ onMenuClick, onOpenSettings, onNewChat }: StudioH
           </div>
         )}
 
+        {/* Paleta de comandos */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="hidden h-10 gap-2 px-3 text-xs text-muted-foreground md:flex"
+          onClick={onOpenPalette}
+          aria-label="Abrir paleta de comandos"
+          title="Paleta de comandos (Ctrl+K)"
+        >
+          <Search className="size-4" aria-hidden />
+          <kbd className="font-mono">Ctrl</kbd>
+          <kbd className="font-mono">K</kbd>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-10 md:hidden"
+          onClick={onOpenPalette}
+          aria-label="Buscar"
+        >
+          <Search className="size-5" />
+        </Button>
+
         <Button
           variant={splitMode ? 'secondary' : 'ghost'}
           size="icon"
@@ -112,13 +140,31 @@ export function StudioHeader({ onMenuClick, onOpenSettings, onNewChat }: StudioH
           <MessagesSquare className="size-5" />
         </Button>
 
+        {/* Cuenta (avatar/estado) */}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-10"
+          onClick={onOpenAccount}
+          aria-label={user ? `Cuenta: ${user.email}` : 'Cuenta y sincronización'}
+          title={user ? `Sesión: ${user.email}` : 'Crea tu cuenta (opcional)'}
+        >
+          {user ? (
+            <span className="flex size-7 items-center justify-center rounded-full bg-primary/90 text-[11px] font-semibold text-primary-foreground">
+              {(user.name ?? user.email).slice(0, 2).toUpperCase()}
+            </span>
+          ) : (
+            <UserRound className="size-5" />
+          )}
+        </Button>
+
         <Button
           variant="ghost"
           size="icon"
           className="size-10"
           onClick={onOpenSettings}
-          aria-label="Ajustes de claves API (BYOK)"
-          title="Ajustes de claves API"
+          aria-label="Abrir ajustes"
+          title="Ajustes"
         >
           <Settings2 className="size-5" />
         </Button>

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "OmniAI Studio — Cliente IA BYOK, Local-First",
   description:
-    "Cliente web de inteligencia artificial Bring Your Own Key: OpenAI, Anthropic, Google Gemini y Ollama. Tus claves se cifran y se guardan solo en tu navegador. Open Source (MIT).",
+    "Cliente web de IA Bring Your Own Key: OpenAI, Anthropic, Google Gemini y Ollama, con skills (búsqueda web, imágenes), servidores MCP, personas, cuentas con sincronización opcional y una personalización total. Tus claves se cifran y se guardan solo en tu navegador. Open Source (MIT).",
   keywords: [
     "OmniAI Studio",
     "BYOK",
@@ -26,12 +26,15 @@ export const metadata: Metadata = {
     "Anthropic",
     "Gemini",
     "Ollama",
+    "MCP",
+    "Skills",
     "Vercel AI SDK",
   ],
   authors: [{ name: "OmniAI Studio Contributors" }],
   openGraph: {
     title: "OmniAI Studio",
-    description: "Cliente IA multi-modelo BYOK · Local-First · Open Source (MIT)",
+    description:
+      "Cliente IA multi-modelo BYOK · Local-First · Skills · MCP · Open Source (MIT)",
     type: "website",
   },
 };

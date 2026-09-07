@@ -130,6 +130,17 @@
     color-scheme: dark;
   }
 
+  /* Tamaño de letra global configurable (Ajustes · Apariencia) */
+  html[data-omni-font="sm"] {
+    font-size: 14.5px;
+  }
+  html[data-omni-font="md"] {
+    font-size: 16px;
+  }
+  html[data-omni-font="lg"] {
+    font-size: 17.5px;
+  }
+
   /* Scrollbars finas y discretas */
   * {
     scrollbar-width: thin;
@@ -165,12 +176,25 @@
     @apply border border-border/60 bg-card/60 backdrop-blur-xl;
   }
 
-  /* Rejilla sutil de fondo (hero / splash) */
+  /* Rejilla sutil de fondo (hero / splash) — adaptada a tema claro */
   .bg-grid {
     background-image:
-      linear-gradient(to right, oklch(1 0 0 / 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(1 0 0 / 0.035) 1px, transparent 1px);
+      linear-gradient(to right, oklch(0 0 0 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0 0 0 / 0.05) 1px, transparent 1px);
     background-size: 32px 32px;
     mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
   }
+}
+
+/* Tema claro: rejilla menos visible y scrollbars coherentes */
+.light .bg-grid {
+  background-image:
+    linear-gradient(to right, oklch(0 0 0 / 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0 0 0 / 0.045) 1px, transparent 1px);
+}
+.light * {
+  scrollbar-color: oklch(0.6 0 0 / 0.5) transparent;
+}
+.light ::-webkit-scrollbar-thumb {
+  background: oklch(0.6 0 0 / 0.5);
 }

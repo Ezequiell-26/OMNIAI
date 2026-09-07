@@ -1,25 +1,29 @@
 'use client';
 
 /**
- * ChatBox — panel de conversación completo (compatible con split-view).
+ * ChatBox — panel de conversación completo (compatible con split-view) v2.
  *
- * Integra `useChat` de Vercel AI SDK (@ai-sdk/react v7) con un
- * `DefaultChatTransport` cuya cabecera `x-omni-config` se resuelve en el
- * momento de cada envío (función `Resolvable`), de modo que cambiar de
- * modelo o de clave a mitad de conversación funciona sin remontar el chat.
+ * - `useChat` con `DefaultChatTransport`: cabecera BYOK (`x-omni-config`) +
+ *   cuerpo de features (skills/MCP/params/persona) resueltos en cada envío.
+ * - Barra de herramientas en el input (skills, persona, prompts).
+ * - Regenerar última respuesta · anchura del chat configurable.
  */
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
 import { DefaultChatTransport, type UIMessage } from 'ai';
 import { AlertTriangle, KeyRound, RefreshCw, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { ChatInput, ConfigHint } from '@/components/chat/chat-input';
 import { ChatMessage } from '@/components/chat/chat-message';
+import { InputToolbar } from '@/components/chat/input-toolbar';
 import { ModelSelector, PROVIDER_ICON } from '@/components/chat/model-selector';
+import { PromptLibraryDialog } from '@/components/chat/prompt-library-dialog';
 import { Button } from '@/components/ui/button';
 import { findModel, isProviderReady, PROVIDERS, type ReadinessContext } from '@/lib/ai/catalog';
+import { buildFeaturePayload } from '@/lib/chat-payload';
 import { buildConfigHeader, useSettingsStore } from '@/lib/store/use-settings-store';
+import { useAppStore, type ChatWidth } from '@/lib/store/use-app-store';
 import type { PanelId } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -36,12 +40,18 @@ interface ChatBoxProps {
   className?: string;
 }
 
+const WIDTH_CLASS: Record<ChatWidth, string> = {
+  normal: 'max-w-3xl',
+  wide: 'max-w-4xl',
+  full: 'max-w-none',
+};
+
 /** Sugerencias del estado vacío. */
 const SUGGESTIONS = [
   'Explícame la diferencia entre REST y GraphQL con un ejemplo de código',
-  'Escribe una función en TypeScript con debounce y explica cada línea',
+  'Busca en la web las novedades de Vercel AI SDK y resúmelas',
+  'Dibújame una imagen de un zorro programando en una cabaña nevada',
   'Resume las ventajas del enfoque Local-First en una tabla Markdown',
-  'Genera un componente React de login con validación y estilos Tailwind',
 ];
 
 export function ChatBox({
@@ -61,6 +71,10 @@ export function ChatBox({
   const ollamaModelsCsv = useSettingsStore((s) => s.ollamaModelsCsv);
   const setPanelSelection = useSettingsStore((s) => s.setPanelSelection);
 
+  const chatWidth = useAppStore((s) => s.chatWidth);
+  const [inputValue, setInputValue] = useState('');
+  const [promptsOpen, setPromptsOpen] = useState(false);
+
   const ctx: ReadinessContext = useMemo(
     () => ({ keys, ollamaUrl, customBaseUrl, customModel, ollamaModelsCsv }),
     [keys, ollamaUrl, customBaseUrl, customModel, ollamaModelsCsv],
@@ -75,12 +89,13 @@ export function ChatBox({
     onMessagesChangeRef.current = onMessagesChange;
   }, [onMessagesChange]);
 
-  // Transporte con cabecera BYOK resuelta en cada request.
+  // Transporte con cabecera BYOK + features resueltas en cada request.
   const transport = useMemo(
     () =>
       new DefaultChatTransport<UIMessage>({
         api: '/api/chat',
         headers: () => ({ 'x-omni-config': buildConfigHeader(panelId) }),
+        body: () => ({ features: buildFeaturePayload() }),
       }),
     [panelId],
   );
@@ -108,6 +123,9 @@ export function ChatBox({
 
   const isBusy = status === 'streaming' || status === 'submitted';
   const providerLabel = PROVIDERS[panel.provider].label;
+
+  const lastMessage = messages[messages.length - 1];
+  const canRegenerate = !isBusy && lastMessage?.role === 'assistant';
 
   const disabledHint = (
     <ConfigHint
@@ -173,13 +191,16 @@ export function ChatBox({
             </div>
           </div>
         ) : (
-          <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-6">
+          <div className={cn('mx-auto flex w-full flex-col gap-5 px-4 py-6', WIDTH_CLASS[chatWidth])}>
             {messages.map((message, index) => (
               <ChatMessage
                 key={message.id}
                 message={message}
                 modelInfo={modelInfo}
                 streaming={isBusy && index === messages.length - 1 && message.role === 'assistant'}
+                onRegenerate={
+                  canRegenerate && index === messages.length - 1 ? () => regenerate() : undefined
+                }
               />
             ))}
             <div className="h-2" />
@@ -189,7 +210,7 @@ export function ChatBox({
 
       {/* Banner de error con reintento */}
       {error && (
-        <div className="mx-auto w-full max-w-3xl px-4 pb-2">
+        <div className={cn('mx-auto w-full px-4 pb-2', WIDTH_CLASS[chatWidth])}>
           <div className="flex items-start gap-2.5 rounded-xl border border-destructive/40 bg-destructive/10 px-3.5 py-2.5 text-sm text-destructive">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
             <p className="min-w-0 flex-1 break-words">{error.message}</p>
@@ -221,12 +242,23 @@ export function ChatBox({
       )}
 
       <ChatInput
+        value={inputValue}
+        onValueChange={setInputValue}
         onSend={(text) => sendMessage({ text })}
         onStop={stop}
         isBusy={isBusy}
         disabled={!ready}
         disabledHint={disabledHint}
         placeholder={placeholder ?? `Mensaje para ${modelInfo?.label ?? providerLabel}…`}
+        toolbar={<InputToolbar onOpenPrompts={() => setPromptsOpen(true)} />}
+      />
+
+      <PromptLibraryDialog
+        open={promptsOpen}
+        onOpenChange={setPromptsOpen}
+        onInsert={(content) => {
+          setInputValue((prev) => (prev ? `${prev}\n${content}` : content));
+        }}
       />
     </section>
   );
