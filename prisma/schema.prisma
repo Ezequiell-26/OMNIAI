@@ -2,6 +2,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Segundo cliente en ruta dedicada: se regenera en cada db:push y se importa
+// directo desde src/lib/db.ts. Si el proceso dev vive mucho tiempo, así nunca
+// usa un cliente viejo de la caché de módulos (auto-curación sin restart).
+generator clientFresh {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma-fresh/client"
+}
+
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
@@ -10,6 +18,8 @@ datasource db {
 // ────────────────────────────────────────────────
 // OMNIAI — Super Agente Studio
 // Fase 1: Agentes, Conversaciones y Mensajes
+// Fase 2: Flujos multi-agente y Ejecuciones (inspirado en
+//         deepseek-harness MIT: agent-loop + agent-teams)
 // ────────────────────────────────────────────────
 
 model Agent {
@@ -43,4 +53,31 @@ model Message {
   conversationId String
   conversation  Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   createdAt     DateTime     @default(now())
+}
+
+// Flujo visual (grafo de agentes). Nodos/aristas serializados como JSON
+// en String porque SQLite en Prisma no soporta el tipo Json.
+model Flow {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  nodes       String   @default("[]")
+  edges       String   @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  runs        FlowRun[]
+}
+
+// Ejecución de un flujo (una traza completa, tipo run/trace)
+model FlowRun {
+  id         String    @id @default(cuid())
+  flowId     String
+  flow       Flow      @relation(fields: [flowId], references: [id], onDelete: Cascade)
+  status     String    @default("running") // running | success | error
+  input      String    @default("")
+  output     String    @default("")
+  steps      String    @default("[]")
+  error      String?
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
 }

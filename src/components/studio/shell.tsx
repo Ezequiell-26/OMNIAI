@@ -18,6 +18,8 @@ import {
 } from 'lucide-react'
 import { ChatView } from '@/components/studio/chat-view'
 import { AgentsView } from '@/components/studio/agents-view'
+import { FlowsView } from '@/components/studio/flows-view'
+import { RunsView } from '@/components/studio/runs-view'
 import { SettingsView } from '@/components/studio/settings-view'
 import { PlaceholderView } from '@/components/studio/placeholder-view'
 
@@ -38,10 +40,10 @@ const NAV: {
 }[] = [
   { id: 'chat', label: 'Chat', icon: MessageSquare },
   { id: 'agents', label: 'Agentes', icon: Bot },
-  { id: 'flows', label: 'Flujos', icon: GitBranch, soon: 'F2' },
+  { id: 'flows', label: 'Flujos', icon: GitBranch },
   { id: 'skills', label: 'Skills & Tools', icon: Puzzle, soon: 'F3' },
   { id: 'knowledge', label: 'Conocimiento', icon: LibraryBig, soon: 'F3' },
-  { id: 'runs', label: 'Ejecuciones', icon: Activity, soon: 'F2' },
+  { id: 'runs', label: 'Ejecuciones', icon: Activity },
   { id: 'settings', label: 'Ajustes', icon: Settings },
 ]
 
@@ -113,7 +115,7 @@ export function StudioShell() {
           </h1>
           <span className="ml-auto hidden items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-400 sm:flex">
             <span className="size-1.5 animate-pulse rounded-full bg-emerald-400" />
-            OMNIAI v0.1 · Fase 1
+            OMNIAI v0.2 · Fase 2
           </span>
         </header>
 
@@ -121,29 +123,18 @@ export function StudioShell() {
           {view === 'chat' && <ChatView />}
           {view === 'agents' && <AgentsView />}
           {view === 'settings' && <SettingsView />}
-          {view === 'flows' && (
-            <PlaceholderView
-              icon={GitBranch}
-              phase="Fase 2"
-              title="Constructor de Flujos"
-              description="Diseñá pipelines de agentes arrastrando nodos: entradas, decisiones, bucles y salidas. Inspirado en React Flow (MIT) y LangGraph (MIT)."
-              features={[
-                'Editor visual drag & drop de multi-agentes',
-                'Ejecución paso a paso con checkpoints',
-                'Conexión entre salidas y entradas de agentes',
-              ]}
-            />
-          )}
+          {view === 'flows' && <FlowsView />}
+          {view === 'runs' && <RunsView />}
           {view === 'skills' && (
             <PlaceholderView
               icon={Puzzle}
               phase="Fase 3"
               title="Skills & Tools (MCP)"
-              description="Un marketplace de herramientas para tus agentes: navegación web, ejecución de código, APIs externas y servidores MCP. Inspirado en el ecosistema MCP (MIT) y browser-use (MIT)."
+              description="Un marketplace de herramientas para tus agentes: navegación web, ejecución de código, APIs externas y servidores MCP. Con la filosofía everything-is-a-plugin de deepseek-harness (MIT, 215k★)."
               features={[
                 'Cientos de herramientas vía protocolo MCP',
+                'Registro de plugins estilo deepseek-harness',
                 'Agentes que navegan y actúan en la web',
-                'Sandbox de ejecución de código',
               ]}
             />
           )}
@@ -157,19 +148,6 @@ export function StudioShell() {
                 'Ingesta de PDF, Word, webs y notas',
                 'Memoria persistente por agente',
                 'Citas y fuentes en las respuestas',
-              ]}
-            />
-          )}
-          {view === 'runs' && (
-            <PlaceholderView
-              icon={Activity}
-              phase="Fase 2"
-              title="Ejecuciones & Trazas"
-              description="Observá cada paso de tus agentes: prompts, tools llamadas, tokens y costos. Inspirado en OpenHands (MIT) y SWE-agent (MIT)."
-              features={[
-                'Timeline de cada run con detalles',
-                'Métricas de tokens y latencia',
-                'Re-ejecutar con un clic',
               ]}
             />
           )}
