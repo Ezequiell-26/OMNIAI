@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +7,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// ────────────────────────────────────────────────
+// OMNIAI — Super Agente Studio
+// Fase 1: Agentes, Conversaciones y Mensajes
+// ────────────────────────────────────────────────
+
+model Agent {
+  id           String   @id @default(cuid())
+  name         String
+  emoji        String   @default("🤖")
+  description  String   @default("")
+  systemPrompt String
+  model        String   @default("omnia-1")
+  temperature  Float    @default(0.7)
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  conversations Conversation[]
 }
 
-model Post {
+model Conversation {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  title     String   @default("Nueva conversación")
+  agentId   String?
+  agent     Agent?   @relation(fields: [agentId], references: [id], onDelete: SetNull)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  messages  Message[]
+}
+
+model Message {
+  id            String       @id @default(cuid())
+  role          String
+  content       String
+  conversationId String
+  conversation  Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
 }
