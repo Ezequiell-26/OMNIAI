@@ -5,13 +5,20 @@
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "30f596fc16a55a90ed5a5daf30f4eb80f8090e03",
+  "lastKnownMainHead": "098eb516d67751196eff8c1f4d8acd3089270e4c",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
     "layers": ["core", "agent", "adapters", "surfaces"],
     "surfaces": ["web", "windows"],
     "singleSourceOfTruth": true
+  },
+  "gitStrategy": {
+    "canonicalBranch": "main",
+    "developmentBranchesAllowed": false,
+    "deliveryRule": "Every completed feature must be committed to main.",
+    "historicalBranches": ["web", "windows-app"],
+    "historicalBranchesPolicy": "Reference/recovery only; port useful capabilities into main; never treat them as parallel product sources."
   },
   "implemented": {
     "coreContracts": true,
@@ -25,7 +32,9 @@
     "toolRegistry": true,
     "boundedAgentExecutionLoop": true,
     "architectureGuard": true,
-    "coreTests": true
+    "coreTests": true,
+    "persistentAiMemory": true,
+    "mainOnlyContributionContract": true
   },
   "partial": {
     "eventBus": "typed in Core; full durable event store and surface streaming still pending",
@@ -84,8 +93,8 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "change": "Established persistent AI project memory and continuation protocol; Core 1.1 runtime foundation remains the current implementation baseline.",
-    "nextExtensionPoint": "Connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
-    "testsExpected": ["bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
+    "change": "Made main the only canonical development/integration branch and strengthened the multi-AI continuation contract.",
+    "nextExtensionPoint": "Continue from main only: connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
+    "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
 }
