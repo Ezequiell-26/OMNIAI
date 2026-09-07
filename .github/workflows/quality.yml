@@ -25,6 +25,12 @@ jobs:
       - name: Architecture guard
         run: bun run verify:architecture
 
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Core regression tests
+        run: bun run test:core
+
       - name: Lint
         run: bun run lint
 
