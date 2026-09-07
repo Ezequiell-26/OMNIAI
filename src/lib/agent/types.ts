@@ -1,6 +1,8 @@
 export type {
   AgentStatus,
   AgentPermission,
+  RiskLevel,
+  ApprovalDecision,
   ExecutionMode,
   RoutingPolicy,
   AgentToolDefinition,
@@ -8,5 +10,12 @@ export type {
   AgentDefinition,
   AgentPlanStep,
   AgentPlan,
+  AgentRunRecord,
   AgentEvent,
+  CoreCapabilityMap,
+  RunError,
+  RunUsage,
+  RunPersistence,
+  CoreEventSink,
+  CoreConfig,
 } from '../core';
