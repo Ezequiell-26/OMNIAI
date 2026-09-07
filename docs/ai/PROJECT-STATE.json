@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "project": "OMNIAI",
+  "repository": "Ezequiell-26/OMNIAI",
+  "canonicalBranch": "main",
+  "coreVersion": "1.1.0",
+  "state": "active-development",
+  "lastKnownMainHead": "30f596fc16a55a90ed5a5daf30f4eb80f8090e03",
+  "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
+  "architecture": {
+    "brain": "src/lib/core",
+    "layers": ["core", "agent", "adapters", "surfaces"],
+    "surfaces": ["web", "windows"],
+    "singleSourceOfTruth": true
+  },
+  "implemented": {
+    "coreContracts": true,
+    "stateMachine": true,
+    "runManager": true,
+    "permissionManager": true,
+    "aiGatewayBoundary": true,
+    "modelRouter": true,
+    "projectContextRanking": true,
+    "portableExecutionAdapters": true,
+    "toolRegistry": true,
+    "boundedAgentExecutionLoop": true,
+    "architectureGuard": true,
+    "coreTests": true
+  },
+  "partial": {
+    "eventBus": "typed in Core; full durable event store and surface streaming still pending",
+    "persistence": "RunPersistence port + in-memory implementation; application DB adapter pending",
+    "projectIndexer": "context ranking exists; incremental indexer pending",
+    "diffEngine": "existing file diff exists; transactional multi-file ChangeSet pending",
+    "git": "portable adapter contract exists; real adapter/end-to-end UI wiring pending",
+    "terminal": "portable adapter contract exists; secure platform implementation pending",
+    "testRunner": "portable adapter contract exists; platform implementation pending",
+    "providers": "provider-neutral gateway exists; production adapter/fallback wiring pending",
+    "multiAgent": "roles/starter orchestration exists; full scheduler pending",
+    "webWindows": "surfaces exist; complete shared-runtime migration pending"
+  },
+  "blockedOrRisks": [
+    "web and windows-app branches have divergent histories",
+    "bun.lock must be synchronized before frozen-lockfile CI is reintroduced",
+    "full end-to-end execution depends on concrete platform adapters and provider configuration"
+  ],
+  "priorities": {
+    "P0": [
+      "durable run/event persistence",
+      "real streaming and cancellation",
+      "secure workspace/Git/terminal/test adapters",
+      "transactional ChangeSet with hashes/conflicts/rollback"
+    ],
+    "P1": [
+      "incremental project indexer",
+      "provider adapters and fallback",
+      "self-healing/replan loop",
+      "multi-agent scheduler",
+      "Web/Windows end-to-end Core integration"
+    ],
+    "P2": [
+      "MCP lifecycle",
+      "Knowledge/RAG",
+      "Memory",
+      "observability/traces/cost",
+      "workflows"
+    ],
+    "P3": [
+      "advanced routing optimization",
+      "plugins/marketplace",
+      "remote execution/distribution"
+    ]
+  },
+  "requiredRead": [
+    "AGENTS.md",
+    "docs/ai/PROJECT-CONTEXT.md",
+    "docs/ai/PROJECT-STATE.json",
+    "docs/ai/DECISIONS.md",
+    "docs/ai/HANDOFF.md",
+    "docs/architecture/unified-core.md",
+    "docs/architecture/audit.md",
+    "docs/development/ai-contributor-contract.md",
+    "docs/open-source/mit-agent-references.md"
+  ],
+  "lastSession": {
+    "date": "2026-09-08",
+    "change": "Established persistent AI project memory and continuation protocol; Core 1.1 runtime foundation remains the current implementation baseline.",
+    "nextExtensionPoint": "Connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
+    "testsExpected": ["bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
+  }
+}
