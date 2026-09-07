@@ -31,6 +31,9 @@ model Agent {
   model        String   @default("omnia-1")
   temperature  Float    @default(0.7)
   isDefault    Boolean  @default(false)
+  // Skills/tools activadas (JSON array de ids). Everything-is-a-plugin,
+  // inspirado en deepseek-harness (MIT).
+  skills       String   @default("[]")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   conversations Conversation[]
@@ -50,6 +53,9 @@ model Message {
   id            String       @id @default(cuid())
   role          String
   content       String
+  // Trazas de tool-use del mensaje (JSON array). Estilo spans de
+  // openai-agents-python (MIT).
+  toolUses      String       @default("[]")
   conversationId String
   conversation  Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   createdAt     DateTime     @default(now())

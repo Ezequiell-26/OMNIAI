@@ -8,7 +8,9 @@ import type {
   ChatMessage,
   ConversationDetail,
   ConversationSummary,
+  ToolUseTrace,
 } from '@/lib/studio-types'
+import { parseToolUses } from '@/lib/studio-types'
 import {
   Bot,
   ChevronDown,
@@ -20,10 +22,10 @@ import {
 } from 'lucide-react'
 
 const SUGGESTIONS = [
-  'Explicame qué sabe hacer este studio',
-  'Escribime un plan de proyecto para una app IA',
-  'Generame un script de Python que renombre archivos',
-  'Resumime las tendencias de agentes IA 2026',
+  '¿Qué día es hoy? Usá tus herramientas',
+  'Buscá en la web las últimas noticias de agentes IA y resumilas',
+  'Calculá el 18% de IVA sobre 125000 y mostrame la cuenta',
+  'Leé https://es.wikipedia.org/wiki/Inteligencia_artificial y haz un resumen',
 ]
 
 export function ChatView() {
@@ -357,6 +359,8 @@ function ConversationList({
 
 function MessageBubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === 'user'
+  const toolUses: ToolUseTrace[] = isUser ? [] : parseToolUses(message.toolUses)
+  const [openTrace, setOpenTrace] = useState<number | null>(null)
   return (
     <div className={cn('flex gap-3', isUser && 'flex-row-reverse')}>
       <div
@@ -379,6 +383,43 @@ function MessageBubble({ message }: { message: ChatMessage }) {
             : 'rounded-tl-sm bg-zinc-900 text-zinc-200',
         )}
       >
+        {/* Trazas de tool-use (spans) */}
+        {toolUses.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-1.5">
+            {toolUses.map((t, i) => (
+              <div key={i} className="w-full">
+                <button
+                  type="button"
+                  onClick={() => setOpenTrace(openTrace === i ? null : i)}
+                  aria-expanded={openTrace === i}
+                  className={cn(
+                    'inline-flex max-w-full items-center gap-1.5 rounded-full border px-2 py-0.5 text-[10px] font-medium transition-colors',
+                    t.ok
+                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20'
+                      : 'border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20',
+                  )}
+                  title={`${t.skillName} · ${t.durationMs}ms`}
+                >
+                  <span aria-hidden>{t.emoji}</span>
+                  <span className="truncate">{t.skillName}</span>
+                  <span className="text-[9px] opacity-70">{t.durationMs}ms</span>
+                  <ChevronDown
+                    className={cn(
+                      'size-2.5 transition-transform',
+                      openTrace === i && 'rotate-180',
+                    )}
+                    aria-hidden
+                  />
+                </button>
+                {openTrace === i && (
+                  <pre className="mt-1 max-h-40 overflow-y-auto rounded-lg border border-zinc-800 bg-zinc-950 p-2 text-[10px] whitespace-pre-wrap text-zinc-400">
+                    {t.result.slice(0, 800) || '(sin resultado)'}
+                  </pre>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
         {isUser ? (
           <p className="whitespace-pre-wrap break-words">{message.content}</p>
         ) : (

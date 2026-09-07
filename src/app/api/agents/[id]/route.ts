@@ -1,9 +1,18 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { SKILLS } from '@/lib/skills'
 
 export const dynamic = 'force-dynamic'
 
 type Params = { params: Promise<{ id: string }> }
+
+/** Valida y normaliza el array de skills recibido del cliente. */
+function sanitizeSkills(input: unknown): string | null {
+  if (!Array.isArray(input)) return null
+  const valid = new Set(SKILLS.map((s) => s.id))
+  const ids = input.filter((x): x is string => typeof x === 'string' && valid.has(x))
+  return JSON.stringify([...new Set(ids)])
+}
 
 export async function PATCH(req: Request, { params }: Params) {
   const { id } = await params
@@ -19,6 +28,8 @@ export async function PATCH(req: Request, { params }: Params) {
       data.systemPrompt = body.systemPrompt.slice(0, 4000)
     if (typeof body.temperature === 'number')
       data.temperature = Math.min(Math.max(body.temperature, 0), 2)
+    const skills = sanitizeSkills(body.skills)
+    if (skills !== null) data.skills = skills
     const agent = await db.agent.update({ where: { id }, data })
     return NextResponse.json(agent)
   } catch {

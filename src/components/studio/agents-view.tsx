@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import type { Agent } from '@/lib/studio-types'
+import { parseAgentSkills } from '@/lib/studio-types'
+import { DEFAULT_AGENT_SKILLS, SKILL_CATALOG } from '@/lib/skill-catalog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,6 +22,7 @@ import {
   Bot,
   CheckCircle2,
   Pencil,
+  Plug,
   Plus,
   Thermometer,
   Trash2,
@@ -31,6 +34,7 @@ interface FormState {
   description: string
   systemPrompt: string
   temperature: number
+  skills: string[]
 }
 
 const EMPTY: FormState = {
@@ -39,6 +43,7 @@ const EMPTY: FormState = {
   description: '',
   systemPrompt: '',
   temperature: 0.7,
+  skills: [...DEFAULT_AGENT_SKILLS],
 }
 
 const EMOJIS = ['🤖', '🧠', '🚀', '📝', '🔍', '💼', '🎯', '🧪', '🎨', '👨‍💻', '📊', '🛠️']
@@ -78,6 +83,7 @@ export function AgentsView() {
       description: a.description,
       systemPrompt: a.systemPrompt,
       temperature: a.temperature,
+      skills: parseAgentSkills(a.skills),
     })
     setError(null)
     setDialogOpen(true)
@@ -197,6 +203,15 @@ export function AgentsView() {
                         <Bot className="size-3" aria-hidden />
                         {a.model}
                       </span>
+                      {parseAgentSkills(a.skills).length > 0 && (
+                        <span
+                          className="flex items-center gap-1"
+                          title={`Skills: ${parseAgentSkills(a.skills).join(', ')}`}
+                        >
+                          <Plug className="size-3 text-emerald-500/70" aria-hidden />
+                          {parseAgentSkills(a.skills).length} skills
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -316,6 +331,43 @@ export function AgentsView() {
               <p className="text-[10px] text-zinc-600">
                 Bajo = preciso y estable · Alto = creativo y sorprendente
               </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Skills y herramientas</Label>
+              <p className="text-[10px] text-zinc-600">
+                Plugins que el agente usará automáticamente cuando los necesite.
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {SKILL_CATALOG.map((s) => {
+                  const active = form.skills.includes(s.id)
+                  return (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          skills: active
+                            ? form.skills.filter((id) => id !== s.id)
+                            : [...form.skills, s.id],
+                        })
+                      }
+                      aria-pressed={active}
+                      title={s.description}
+                      className={cn(
+                        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-all',
+                        active
+                          ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+                          : 'border-zinc-700 bg-zinc-800/50 text-zinc-500 hover:border-zinc-600 hover:text-zinc-300',
+                      )}
+                    >
+                      <span aria-hidden>{s.emoji}</span>
+                      {s.name}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
             {error && dialogOpen && (

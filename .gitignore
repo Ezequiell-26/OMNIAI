@@ -63,3 +63,4 @@ tests/
 .claude/
 agent-ctx/
 worklog.md
+tool-results/

@@ -28,15 +28,21 @@ export function SettingsView() {
             Studio de super-agentes construido con Next.js 16, TypeScript,
             Tailwind, shadcn/ui y Prisma. Diseñado integrando lo mejor de los
             repos open source más importantes del mundo (MIT / Apache-2.0):
-            LangChain, CrewAI, OpenHands, browser-use, mem0, LlamaIndex,
-            LibreChat y muchos más.
+            deepseek-harness (everything-is-a-plugin), CrewAI, OpenAI Agents
+            SDK, LangChain, MCP servers, AutoGen, Mastra, LlamaIndex, mem0,
+            browser-use, OpenHands y muchos más.
           </p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] sm:grid-cols-4">
             <Info label="Licencia" value="MIT" />
             <Info label="Stack" value="Next.js 16" />
-            <Info label="Versión" value="0.1 · Fase 1" />
+            <Info label="Versión" value="0.3 · Fase 3" />
             <Info label="Repo" value="OMNIAI" />
           </div>
+          <p className="mt-3 text-[10px] leading-relaxed text-zinc-600">
+            Catálogo completo de repos leídos y sus licencias:{' '}
+            <span className="font-mono text-zinc-500">docs/REPOS.md</span> en el
+            repositorio.
+          </p>
         </div>
       </div>
     </div>
