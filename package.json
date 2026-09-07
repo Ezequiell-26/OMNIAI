@@ -8,6 +8,7 @@
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test:core": "bun test src/lib/core/__tests__",
     "verify:architecture": "node scripts/verify-architecture.mjs",
     "db:push": "prisma db push --accept-data-loss",
     "db:generate": "prisma generate",
