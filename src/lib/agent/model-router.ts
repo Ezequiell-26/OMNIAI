@@ -1,13 +1,58 @@
-import type { ExecutionMode } from './runtime';
-export type RoutingPolicy = 'auto'|'best'|'fastest'|'cheapest'|'private'|'local';
-export interface ModelCandidate { provider: string; model: string; capabilities: string[]; local?: boolean; score?: number; latencyMs?: number; costPerMillion?: number; available?: boolean; }
-export interface RoutingRequest { policy: RoutingPolicy; mode: ExecutionMode; task: 'planning'|'coding'|'testing'|'review'|'research'|'general'; candidates: ModelCandidate[]; }
-export function routeModel(r: RoutingRequest) {
-  const eligible = r.candidates.filter((c) => (c.available ?? true) && !(r.mode === 'local' || r.policy === 'local') || c.local === true).filter((c) => !(r.mode === 'local' || r.policy === 'local') || c.local === true);
-  if (!eligible.length) return null;
-  if (r.policy === 'fastest') return [...eligible].sort((a,b)=>(a.latencyMs??1e9)-(b.latencyMs??1e9))[0];
-  if (r.policy === 'cheapest') return [...eligible].sort((a,b)=>(a.costPerMillion??0)-(b.costPerMillion??0))[0];
-  const preferred = r.task === 'coding' ? ['code','reasoning','tools'] : r.task === 'planning' ? ['reasoning','long-context'] : r.task === 'research' ? ['web','long-context'] : ['general'];
-  return [...eligible].sort((a,b)=>score(b,preferred)-score(a,preferred))[0];
+import type { ExecutionMode, RoutingPolicy } from '../core';
+
+export { type ExecutionMode, type RoutingPolicy } from '../core';
+
+export interface ModelCandidate {
+  provider: string;
+  model: string;
+  capabilities: string[];
+  local?: boolean;
+  score?: number;
+  latencyMs?: number;
+  costPerMillion?: number;
+  available?: boolean;
 }
-function score(c: ModelCandidate, preferred: string[]) { return preferred.reduce((n,p)=>n+(c.capabilities.includes(p)?10:0),0)+(c.score??0); }
+
+export interface RoutingRequest {
+  policy: RoutingPolicy;
+  mode: ExecutionMode;
+  task: 'planning' | 'coding' | 'testing' | 'review' | 'research' | 'general';
+  candidates: ModelCandidate[];
+}
+
+export function routeModel(request: RoutingRequest): ModelCandidate | null {
+  const localOnly = request.mode === 'local' || request.policy === 'local';
+  const privateOnly = request.mode === 'private' || request.policy === 'private';
+
+  const eligible = request.candidates.filter((candidate) => {
+    if (candidate.available === false) return false;
+    if (localOnly && candidate.local !== true) return false;
+    if (privateOnly && candidate.provider === 'public') return false;
+    return true;
+  });
+
+  if (!eligible.length) return null;
+
+  if (request.policy === 'fastest') {
+    return [...eligible].sort((a, b) => (a.latencyMs ?? Number.POSITIVE_INFINITY) - (b.latencyMs ?? Number.POSITIVE_INFINITY))[0];
+  }
+
+  if (request.policy === 'cheapest') {
+    return [...eligible].sort((a, b) => (a.costPerMillion ?? Number.POSITIVE_INFINITY) - (b.costPerMillion ?? Number.POSITIVE_INFINITY))[0];
+  }
+
+  const preferred =
+    request.task === 'coding'
+      ? ['code', 'reasoning', 'tools']
+      : request.task === 'planning'
+        ? ['reasoning', 'long-context']
+        : request.task === 'research'
+          ? ['web', 'long-context']
+          : ['general'];
+
+  return [...eligible].sort((a, b) => score(b, preferred) - score(a, preferred))[0];
+}
+
+function score(candidate: ModelCandidate, preferred: string[]) {
+  return preferred.reduce((total, capability) => total + (candidate.capabilities.includes(capability) ? 10 : 0), 0) + (candidate.score ?? 0);
+}
