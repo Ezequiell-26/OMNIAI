@@ -2,91 +2,163 @@
 
 This file is mandatory reading for every AI coding agent, in every new chat, before changing the repository.
 
-## Canonical source of truth
+## CANONICAL SOURCE OF TRUTH
 
 - Repository: `Ezequiell-26/OMNIAI`
-- **Canonical development and integration branch: `main`**
+- **Canonical development, integration, testing and release branch: `main`**
 - Product brain: `src/lib/core`
-- Core version is declared by `OMNIAI_CORE_VERSION` in `src/lib/core/contracts.ts`.
-- Web and Windows are surfaces/adapters, not alternate brains.
+- Core version: `OMNIAI_CORE_VERSION` in `src/lib/core/contracts.ts`
+- Web and Windows are platform surfaces/adapters, never alternate product brains.
+- Executable source and passing tests outrank documentation when they disagree.
 
 ## ABSOLUTE MAIN RULE
 
-`main` is the only canonical development/integration branch for OMNIAI.
+`main` is the only canonical OMNIAI product branch.
 
-For every AI session:
+Every AI session MUST:
 
-- Start by reading the repository from `main`.
-- Work from the current `main` state.
-- Any completed implementation must end up committed to `main`.
-- Do not leave the finished feature only on `web`, `windows-app`, or any feature branch.
-- Do not create a competing long-lived product branch.
-- Do not force-push `main`.
-- Do not overwrite unrelated work.
-- Before editing after another AI session, verify the current `main` HEAD again.
-- If a useful change exists on another branch, port/cherry-pick/adapt that capability into `main` without replacing unrelated work.
-- Branches such as `web` and `windows-app` are historical/experimental sources only; they are not product sources of truth.
+1. start by reading the current `main` state;
+2. verify the current `main` HEAD before editing;
+3. build on existing functionality instead of recreating it;
+4. keep shared logic in Core/shared layers;
+5. finish every completed implementation by committing it to `main`;
+6. never leave a finished feature only on `web`, `windows-app`, or a temporary branch.
 
-The goal is simple: **one repository, one canonical codebase, one Core, one integration branch: `main`.**
+`web` and `windows-app` may contain historical/experimental work. They are source material only. If they contain useful functionality, extract/adapt that capability into the canonical Core/adapters and finish the work on `main`.
 
-## Read order for a new AI session
+Never force-push, reset destructively, delete branches, or overwrite unrelated work.
 
-Read these files in this order:
+**Target architecture: one repository → one canonical codebase → one Core → one integration branch: `main`.**
 
-1. `AGENTS.md` — this contract.
-2. `docs/ai/PROJECT-CONTEXT.md` — complete architecture and product intent.
-3. `docs/ai/PROJECT-STATE.json` — machine-readable current state and priorities.
-4. `docs/ai/DECISIONS.md` — durable architectural decisions.
-5. `docs/ai/HANDOFF.md` — exact continuation point from the previous work session.
-6. `docs/architecture/unified-core.md` — Core/surface boundary.
-7. `docs/architecture/audit.md` — known strengths, gaps, risks and priorities.
-8. `docs/development/ai-contributor-contract.md` — collaboration and safety contract.
-9. `docs/open-source/mit-agent-references.md` — approved architectural references and license rules.
-10. Then inspect the actual source tree and verify that documentation still matches reality.
+## REQUIRED READING ORDER
 
-Documentation never outranks executable code. When docs and code disagree, inspect the code, correct the documentation, and record the decision.
+Read these files in order at the beginning of every new AI session:
 
-## Mandatory continuation behavior
+1. `AGENTS.md`
+2. `docs/ai/PROJECT-CONTEXT.md`
+3. `docs/ai/PROJECT-STATE.json`
+4. `docs/ai/DECISIONS.md`
+5. `docs/ai/HANDOFF.md`
+6. `docs/ai/AI-ENGINEERING-STANDARD.md`
+7. `docs/architecture/unified-core.md`
+8. `docs/architecture/audit.md`
+9. `docs/development/ai-contributor-contract.md`
+10. `docs/open-source/mit-agent-references.md`
+11. relevant source files and tests
 
-A new AI must NOT restart the project from memory or invent a new architecture.
+Do not trust the handoff blindly. Re-verify the real repository state.
+
+## AI CONTINUATION PROTOCOL
+
+A new AI must continue the existing project, not restart it.
 
 Before coding:
 
-- verify `main` HEAD;
-- inspect the files relevant to the requested feature;
-- inspect `PROJECT-STATE.json` and `HANDOFF.md`;
-- identify the existing implementation that can be extended;
-- preserve working behavior;
-- keep shared behavior in Core;
-- adapt Web/Windows through adapters;
-- avoid duplicate contracts, runtimes or permission systems.
+- identify the current Core version and `main` HEAD;
+- inspect existing implementation and tests for the requested area;
+- inspect persistent project memory;
+- compare related work in existing branches before reimplementing anything;
+- identify the smallest safe extension point;
+- preserve current public behavior unless a breaking change is explicitly intended;
+- decide whether the feature belongs in Core, Agent, adapter, surface, or UI.
 
 After coding:
 
-- update `PROJECT-STATE.json` when capability/status changes;
+- update `PROJECT-STATE.json` when implementation status changes;
 - update `HANDOFF.md` with the exact continuation point;
 - update `DECISIONS.md` for durable architectural decisions;
-- add tests/guards for important behavior;
-- update `docs/architecture/audit.md` when priorities or known gaps change;
-- update platform documentation if an adapter changes;
-- **commit all final work to `main`**;
-- verify the resulting `main` HEAD;
-- never force-push, delete branches, or overwrite unrelated work.
+- update `PROJECT-CONTEXT.md` when the product/architecture changes;
+- update `docs/architecture/audit.md` when gaps or priorities change;
+- add regression tests/guards;
+- run the strongest available verification;
+- inspect the final diff for accidental changes;
+- commit the finished work to `main`.
 
-## Definition of done
+## PROFESSIONAL OPEN-SOURCE RESEARCH POLICY
 
-A capability is not complete because a UI exists. For agent functionality, prefer the chain:
+OMNIAI must continuously learn from high-quality professional software projects while preserving its own architecture, security and licensing.
 
-`UI → API/surface adapter → Core runtime → persistence/events → real adapter/tool → tests → error handling`
+### Source quality priority
 
-Do not mark a feature DONE when it is only simulated.
+When researching implementation patterns, prefer:
 
-## Infinite improvement rule
+1. production-grade and actively maintained projects;
+2. widely adopted projects with strong engineering practices;
+3. clear architecture, tests, documentation and security posture;
+4. permissive licenses compatible with OMNIAI;
+5. especially strong MIT-licensed references when source reuse is contemplated;
+6. official upstream source/docs over blogs, snippets or low-quality tutorials.
 
-OMNIAI is intended to be improved by many AI sessions over time. Every session must leave the repository in a more understandable state than before it started.
+Use the curated registry at `docs/open-source/mit-agent-references.md` and expand it when genuinely relevant professional references are found.
 
-Every session must leave four durable artifacts up to date:
+### License rules
 
-`PROJECT-CONTEXT.md` + `PROJECT-STATE.json` + `DECISIONS.md` + `HANDOFF.md`
+- Research architecture and behavior first; research is not copying.
+- Prefer independent reimplementation inside OMNIAI's own contracts.
+- Before importing source, verify the exact repository/path license, copyright obligations, and dependency licenses.
+- Prefer MIT for code incorporation when technically equivalent.
+- Apache-2.0 or another permissive license may be used only after compatibility and attribution are checked.
+- Do not copy AGPL/SSPL/restrictive code into the MIT codebase without an explicit license strategy.
+- Every real third-party source incorporation must be recorded in `THIRD-PARTY-NOTICES.md` with upstream project, version/commit, license, copyright and imported paths.
+- Never claim an API, SDK, model or dependency is MIT merely because OMNIAI is MIT.
 
-This is the project's persistent engineering memory.
+### Currentness rule
+
+For current or rapidly changing libraries/projects, an AI must verify current upstream documentation and license information before making critical architectural decisions. Do not rely on stale model memory for versions, APIs, licenses or security-sensitive behavior.
+
+## FEATURE DEFINITION OF DONE
+
+A capability is not complete because a UI exists or because an interface was declared.
+
+Prefer this evidence chain:
+
+`UI → surface/API adapter → Core runtime → persistence/events → real tool/adapter → tests → error handling → documentation`
+
+A contract without implementation is partial.
+A button without runtime is partial.
+A mock without real integration is partial.
+
+Never mark partial functionality as DONE in project memory.
+
+## SAFETY
+
+Read-only inspection should be easy. Writes, deletes, terminal commands, Git writes, network access, secret handling, deployment and production actions must pass the appropriate policy/approval system.
+
+Secrets are never ordinary workspace data. Agents must not silently overwrite external changes, escape the workspace boundary, or execute destructive operations without explicit authorization.
+
+## CORE ARCHITECTURE
+
+The only logical brain is `src/lib/core`.
+
+`Core → Agent → Adapters → Web/Windows surfaces`
+
+Do not duplicate agent lifecycle, permissions, model routing, provider selection, run semantics, event contracts, tool contracts or shared business rules in platform surfaces.
+
+## CONTINUOUS IMPROVEMENT
+
+OMNIAI is intentionally designed to improve across many AI sessions.
+
+Every meaningful session should leave the repository more capable, tested, documented, understandable and safe.
+
+Persistent engineering memory is:
+
+`AGENTS.md + PROJECT-CONTEXT.md + PROJECT-STATE.json + DECISIONS.md + HANDOFF.md + architecture/audit.md`
+
+Git history is part of the durable project record.
+
+## HANDOFF REQUIREMENT
+
+Every meaningful session must record:
+
+- Core version;
+- exact `main` HEAD;
+- objective;
+- files changed;
+- behavior changed;
+- tests and results;
+- security implications;
+- known issues/blockers;
+- next extension point;
+- documentation synchronization status.
+
+The next AI must be able to continue without needing this chat.
