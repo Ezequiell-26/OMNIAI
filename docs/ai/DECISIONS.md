@@ -12,11 +12,11 @@ This file records decisions that future AI sessions must treat as constraints un
 
 ## D002 — Main is canonical
 
-**Decision:** `main` is the final integration branch.
+**Decision:** `main` is the final integration branch and the only canonical product branch.
 
 **Reason:** multiple divergent branches exist and must not become competing product brains.
 
-**Consequence:** use branch history as source material, not as authority; integrate behavior into Core/adapters and finish on `main`.
+**Consequence:** every completed implementation must finish in `main`; other branches are source material or recovery points, never the final home of product functionality.
 
 ## D003 — Ports before platform implementations
 
@@ -65,3 +65,19 @@ This file records decisions that future AI sessions must treat as constraints un
 **Decision:** use permissive repositories as architectural references first; imported code requires license compatibility, attribution and registry documentation.
 
 **Reason:** preserve OMNIAI's coherent architecture and licensing obligations.
+
+## D011 — Professional open-source research standard
+
+**Decision:** future AIs must prefer production-grade, actively maintained, well-tested and well-documented open-source projects when researching implementation approaches. MIT references are preferred when source reuse is contemplated; other permissive licenses require explicit compatibility review.
+
+**Reason:** OMNIAI should learn from serious engineering work instead of unreliable snippets or stale examples.
+
+**Consequence:** current upstream documentation/license data must be verified for rapidly changing dependencies. Architecture should usually be reimplemented within OMNIAI's own contracts rather than copied.
+
+## D012 — Persistent multi-AI continuity
+
+**Decision:** Git plus the persistent AI memory documents are the shared engineering memory across all GPT/AI sessions.
+
+**Reason:** no individual chat is authoritative or permanent.
+
+**Consequence:** every meaningful session updates state and handoff, and the next AI must verify real source/test state before trusting documentation.
