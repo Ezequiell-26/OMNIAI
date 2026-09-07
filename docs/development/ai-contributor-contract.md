@@ -4,7 +4,7 @@ OMNIAI is designed to be improved by multiple AI coding assistants without losin
 
 ## Non-negotiable rules
 
-1. `main` is the canonical integration branch for the product core.
+1. `main` is the canonical development, integration, testing and release branch.
 2. Read `AGENTS.md` first in every new AI session.
 3. Then read `docs/ai/PROJECT-CONTEXT.md`, `docs/ai/PROJECT-STATE.json`, `docs/ai/DECISIONS.md` and `docs/ai/HANDOFF.md` before changing architecture.
 4. Read `docs/architecture/unified-core.md` before changing agent/runtime architecture.
@@ -17,6 +17,19 @@ OMNIAI is designed to be improved by multiple AI coding assistants without losin
 11. Add or update a regression test/guard for every important architectural invariant.
 12. Every intentional change to `main` must have a clear commit message.
 13. At the end of a meaningful session, synchronize the persistent AI memory documents with reality.
+
+## MAIN-ONLY PRODUCT RULE
+
+The product has one canonical codebase and one canonical integration branch: `main`.
+
+- Start every session from current `main`.
+- Finish every completed feature/change by committing it to `main`.
+- A feature is not delivered while it exists only on `web`, `windows-app`, or another branch.
+- Treat `web` and `windows-app` as historical/experimental reference branches, not parallel product sources.
+- If useful code exists elsewhere, compare it against `main`, port the useful capability into the Core/adapters, verify it, and commit the result to `main`.
+- Never force-push, reset, or overwrite unrelated `main` history.
+
+This rule exists specifically so many GPT/AI sessions can work sequentially on the same project without fragmenting the product.
 
 ## Persistent AI memory
 
@@ -46,6 +59,7 @@ read persistent memory
    -> inspect diff for regressions
    -> update persistent memory
    -> commit to main
+   -> verify main HEAD
 ```
 
 ## Multi-AI collaboration
