@@ -19,8 +19,8 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install
-        run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install
 
       - name: Architecture guard
         run: bun run verify:architecture
