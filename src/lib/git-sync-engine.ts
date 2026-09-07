@@ -265,10 +265,11 @@ export function setAutoCommit(value: boolean): boolean {
   return autoCommit
 }
 
-/** Arranca el motor una sola vez por proceso (idempotente). */
+/** Arranca el motor (idempotente y auto-sanable). */
 export function startEngine(): void {
   const s = state()
-  if (s.timer) return
+  // Re-agenda siempre: evita timers muertos tras HMR/reinicios parciales
+  if (s.timer) clearInterval(s.timer)
   s.timer = setInterval(() => {
     void runSync(false)
   }, INTERVAL_MS)
@@ -278,4 +279,19 @@ export function startEngine(): void {
   setTimeout(() => {
     void runSync(false)
   }, 3_000)
+}
+
+/**
+ * Auto-sanación: si por cualquier motivo el intervalo dejó de correr
+ * (HMR, reload, etc.), la próxima consulta de estado relanza el ciclo.
+ * Así el panel (que consulta cada 10s) actúa de heartbeat.
+ */
+export function ensureFreshness(): void {
+  const s = state()
+  if (s.syncing) return
+  const lastAt = s.lastResult ? Date.parse(s.lastResult.at) : 0
+  const staleMs = Date.now() - lastAt
+  if (staleMs > INTERVAL_MS + 5_000) {
+    void runSync(false)
+  }
 }
