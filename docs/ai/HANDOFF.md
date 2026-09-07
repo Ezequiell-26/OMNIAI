@@ -10,9 +10,9 @@ This is the first document to update at the end of every meaningful AI coding se
 
 **Core version:** `1.1.0`
 
-**Current main HEAD when this handoff was created:** `29e7246ae8f50874cb926d347ac0ddcb4d6716cd`
+**Current main HEAD when this handoff was created:** `6fb5aa6f040aa5b7a6ac77563fbb5ba69e03bef7`
 
-**What was just established:** permanent multi-AI engineering policy covering main-only integration, professional open-source research, MIT preference for equivalent source reuse, current upstream verification, license discipline, evidence-based completion and persistent project memory.
+**What was just established:** permanent multi-AI engineering policy covering main-only integration, professional open-source research, MIT preference for equivalent source reuse, current upstream verification, license discipline, evidence-based completion and persistent project memory. The AI context guard now validates these policies.
 
 ## What the next AI should do first
 
@@ -94,10 +94,10 @@ Copy this section for a new session entry instead of deleting historical informa
 
 ## Historical handoff
 
-### 2026-09-08 — persistent-memory + AI engineering standard
+### 2026-09-08 — permanent AI engineering brain
 
 - Core version: 1.1.0
-- Main HEAD: `29e7246ae8f50874cb926d347ac0ddcb4d6716cd`
-- Goal: make independent GPT/AI sessions able to improve OMNIAI continuously from Git alone.
-- Implemented: main-only product rule, permanent AI entrypoint, persistent context/state/decisions/handoff, professional open-source research standard, license discipline and CI enforcement of the AI context rules.
+- Main HEAD: `6fb5aa6f040aa5b7a6ac77563fbb5ba69e03bef7`
+- Goal: make independent GPT/AI sessions able to improve OMNIAI continuously from Git alone with a consistent engineering standard.
+- Implemented: strengthened `AGENTS.md`, professional AI engineering standard, durable architectural decisions, machine-readable state, handoff rules, and CI enforcement for the persistent AI context policy.
 - Next extension point: durable run/event persistence + live streaming + concrete execution adapters.
