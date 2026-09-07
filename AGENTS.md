@@ -5,10 +5,29 @@ This file is mandatory reading for every AI coding agent, in every new chat, bef
 ## Canonical source of truth
 
 - Repository: `Ezequiell-26/OMNIAI`
-- Canonical branch: `main`
+- **Canonical development and integration branch: `main`**
 - Product brain: `src/lib/core`
 - Core version is declared by `OMNIAI_CORE_VERSION` in `src/lib/core/contracts.ts`.
 - Web and Windows are surfaces/adapters, not alternate brains.
+
+## ABSOLUTE MAIN RULE
+
+`main` is the only canonical development/integration branch for OMNIAI.
+
+For every AI session:
+
+- Start by reading the repository from `main`.
+- Work from the current `main` state.
+- Any completed implementation must end up committed to `main`.
+- Do not leave the finished feature only on `web`, `windows-app`, or any feature branch.
+- Do not create a competing long-lived product branch.
+- Do not force-push `main`.
+- Do not overwrite unrelated work.
+- Before editing after another AI session, verify the current `main` HEAD again.
+- If a useful change exists on another branch, port/cherry-pick/adapt that capability into `main` without replacing unrelated work.
+- Branches such as `web` and `windows-app` are historical/experimental sources only; they are not product sources of truth.
+
+The goal is simple: **one repository, one canonical codebase, one Core, one integration branch: `main`.**
 
 ## Read order for a new AI session
 
@@ -49,7 +68,9 @@ After coding:
 - update `DECISIONS.md` for durable architectural decisions;
 - add tests/guards for important behavior;
 - update `docs/architecture/audit.md` when priorities or known gaps change;
-- commit all final work to `main`;
+- update platform documentation if an adapter changes;
+- **commit all final work to `main`**;
+- verify the resulting `main` HEAD;
 - never force-push, delete branches, or overwrite unrelated work.
 
 ## Definition of done
