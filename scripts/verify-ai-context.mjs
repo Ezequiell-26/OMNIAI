@@ -40,6 +40,7 @@ if (!state.coreVersion || !state.architecture?.brain || state.architecture.brain
 const context = readFileSync(join(root, 'docs/ai/PROJECT-CONTEXT.md'), 'utf8');
 const handoff = readFileSync(join(root, 'docs/ai/HANDOFF.md'), 'utf8');
 const agents = readFileSync(join(root, 'AGENTS.md'), 'utf8');
+const contract = readFileSync(join(root, 'docs/development/ai-contributor-contract.md'), 'utf8');
 
 for (const marker of ['PROJECT-STATE.json', 'HANDOFF.md', 'DECISIONS.md']) {
   if (!agents.includes(marker)) {
@@ -55,9 +56,16 @@ for (const marker of ['Core', 'main', 'Web', 'Windows']) {
   }
 }
 
+for (const source of [agents, contract]) {
+  if (!source.includes('main') || !source.includes('final') || !source.includes('commit')) {
+    console.error('AI context check failed. Main-only final commit policy is missing.');
+    process.exit(1);
+  }
+}
+
 if (!handoff.includes('Next extension point') && !handoff.includes('next extension point')) {
   console.error('AI context check failed. HANDOFF.md must contain a continuation point.');
   process.exit(1);
 }
 
-console.log(`OMNIAI AI context check passed (Core ${state.coreVersion}).`);
+console.log(`OMNIAI AI context check passed (Core ${state.coreVersion}, canonical branch main).`);
