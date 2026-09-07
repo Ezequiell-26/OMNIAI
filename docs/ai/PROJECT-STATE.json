@@ -1,11 +1,11 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "project": "OMNIAI",
   "repository": "Ezequiell-26/OMNIAI",
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "098eb516d67751196eff8c1f4d8acd3089270e4c",
+  "lastKnownMainHead": "25feef026dc418c887c07a4dd2e45c14cc751805",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
@@ -13,12 +13,23 @@
     "surfaces": ["web", "windows"],
     "singleSourceOfTruth": true
   },
-  "gitStrategy": {
+  "integrationPolicy": {
     "canonicalBranch": "main",
-    "developmentBranchesAllowed": false,
-    "deliveryRule": "Every completed feature must be committed to main.",
-    "historicalBranches": ["web", "windows-app"],
-    "historicalBranchesPolicy": "Reference/recovery only; port useful capabilities into main; never treat them as parallel product sources."
+    "finishedWorkMustEndOnMain": true,
+    "parallelProductBranches": false,
+    "otherBranchesRole": "historical-or-experimental-source-material-only"
+  },
+  "aiEngineeringPolicy": {
+    "requiredEntrypoint": "AGENTS.md",
+    "professionalReferenceStandard": true,
+    "preferProductionGrade": true,
+    "preferActivelyMaintained": true,
+    "preferWellTested": true,
+    "preferPermissiveLicenses": true,
+    "preferMITForSourceReuseWhenEquivalent": true,
+    "researchMustVerifyCurrentUpstreamDocsAndLicense": true,
+    "researchIsNotCopying": true,
+    "indiscriminateVendoring": false
   },
   "implemented": {
     "coreContracts": true,
@@ -33,8 +44,8 @@
     "boundedAgentExecutionLoop": true,
     "architectureGuard": true,
     "coreTests": true,
-    "persistentAiMemory": true,
-    "mainOnlyContributionContract": true
+    "persistentAIMemory": true,
+    "AIEngineeringStandard": true
   },
   "partial": {
     "eventBus": "typed in Core; full durable event store and surface streaming still pending",
@@ -48,11 +59,6 @@
     "multiAgent": "roles/starter orchestration exists; full scheduler pending",
     "webWindows": "surfaces exist; complete shared-runtime migration pending"
   },
-  "blockedOrRisks": [
-    "web and windows-app branches have divergent histories",
-    "bun.lock must be synchronized before frozen-lockfile CI is reintroduced",
-    "full end-to-end execution depends on concrete platform adapters and provider configuration"
-  ],
   "priorities": {
     "P0": [
       "durable run/event persistence",
@@ -86,6 +92,7 @@
     "docs/ai/PROJECT-STATE.json",
     "docs/ai/DECISIONS.md",
     "docs/ai/HANDOFF.md",
+    "docs/ai/AI-ENGINEERING-STANDARD.md",
     "docs/architecture/unified-core.md",
     "docs/architecture/audit.md",
     "docs/development/ai-contributor-contract.md",
@@ -93,8 +100,9 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "change": "Made main the only canonical development/integration branch and strengthened the multi-AI continuation contract.",
-    "nextExtensionPoint": "Continue from main only: connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
+    "mainHead": "25feef026dc418c887c07a4dd2e45c14cc751805",
+    "change": "Strengthened the permanent AI contributor brain: main-only integration, professional open-source research standard, currentness/license verification, evidence-based completion, and continuous multi-AI handoff.",
+    "nextExtensionPoint": "Connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
     "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
 }
