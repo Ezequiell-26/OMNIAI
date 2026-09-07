@@ -1,0 +1,23 @@
+# OmniAI Studio — Worklog
+
+---
+Task ID: 1..11
+Agent: main (Z.ai Code)
+Task: Construir "OmniAI Studio", cliente web IA BYOK / Local-First con Next.js 16 + Vercel AI SDK v7, estética dark Vercel/Linear, claves cifradas en IndexedDB, chat streaming, split-view multi-modelo y contador de tokens/costes.
+
+Work Log:
+- T1: Inspeccionado el scaffold (Next 16.1.3, React 19, Tailwind v4, shadcn/ui completo, dev server ya en :3000).
+- T2: Instalado `ai@7.0.93`, `@ai-sdk/react@4`, `@ai-sdk/openai@4`, `@ai-sdk/anthropic@4`, `@ai-sdk/google@4`, `idb`, `gpt-tokenizer`, `remark-gfm`, `prism-react-renderer`. Verificadas las firmas reales de AI SDK v7 contra los `.d.ts` (useChat/ChatInit/DefaultChatTransport con `headers` Resolvable, UIMessageChunk `text-start/delta/end`, `createUIMessageStream`, `convertToModelMessages` async, `createGoogle` renombrado en v4).
+- T3: Libs core: `lib/ai/catalog.ts` (proveedores + modelos + pricing USD/1M), `lib/crypto/secret-box.ts` (AES-GCM-256 con clave maestra NO extraíble guardada en IndexedDB; payload `v1.iv.cipher`), `lib/db/local-db.ts` + `conversations.ts` + `secrets.ts` (IndexedDB "omniai-studio"), `lib/tokens.ts` (tokenizador o200k_base + formato coste), `lib/header-codec.ts` (x-omni-config unicode-safe), `lib/ai/messages.ts`.
+- T4: `lib/store/use-settings-store.ts`: Zustand + persist (solo preferencias); claves en claro SOLO en memoria; `loadSecretsIntoStore()`, `persistSecret()` (cifra/borra), `buildConfigHeader(panel)` resuelto en el momento del envío.
+- T5: `app/api/chat/route.ts`: valida cabecera con zod, resuelve modelo por proveedor (OpenAI responses API por defecto; Ollama/custom vía `.chat()` chat-completions por compatibilidad), `streamText` + `toUIMessageStreamResponse({onError})` exponiendo el error real del proveedor; rama demo con z-ai-web-dev-sdk + `createUIMessageStream` manual (chunks start/start-step/text-*/finish-step/finish, abort-aware).
+- T6: `app/layout.tsx` (html dark forzado, metadata es, sonner Toaster), `globals.css` (scrollbars finas, .glass-card, .bg-grid, kbd).
+- T7: Componentes: `code-block` (prism-react-renderer oneDark + copiar), `markdown-renderer` (GFM + overrides completos), `token-badge`, `chat-message` (framer-motion + copiar + streaming dots), `chat-input` (auto-crecimiento, Enter/Shift+Enter, stop), `model-selector` (grupos por proveedor, disabled sin clave, precios), `chat-box` (useChat + transport dinámico + auto-scroll + banner de error con reintentar), `history-sidebar`, `studio-header`, `studio-shell`, `settings/api-key-modal`.
+- T8: `app/page.tsx` → StudioShell; persistencia con debounce 800ms; auto-reapertura de la última conversación; footer sticky con totales de sesión.
+- T9: Lint OK (fix: refs durante render → patrón useEffect) y `tsc --noEmit` OK (fixes: SessionTotals.costUsd, Metadata.license, Uint8Array<ArrayBuffer>, variable `ready`, default branch).
+- T10: Verificación E2E con agent-browser: render dark OK; streaming demo E2E con markdown/código; selector de modelos con estados disabled y precios; modal BYOK → clave guardada cifrada (`v1.…`) en IndexedDB y NUNCA en localStorage; modelo OpenAI real alcanzado (error de región del sandbox propagado con banner + Reintentar, badge coste <$0.0001); split-view con 2 paneles independientes y streams simultáneos; historial (guardar, listar, borrar, badge split, auto-restore tras reload); botón copiar → "¡Copiado!"; responsive móvil (Sheet, split apilado) y desktop 1440px; footer sticky; 0 errores de consola/página. Fix posterior: Ollama/custom → `.chat(model)` (v4 usa /v1/responses por defecto, Ollama solo habla chat/completions).
+- T11: Este worklog + informe de arquitectura al usuario.
+
+Stage Summary:
+- App completa y verificada en navegador. Decisiones clave: AI SDK v7 (instalada por defecto) en vez de v5 pedida implícitamente por el usuario — mismas features, API v7 verificada contra tipos; proveedor "Demo" (z-ai-web-dev-sdk en backend) para probar el pipeline sin claves; claves cifradas con AES-GCM + clave no extraíble en IndexedDB (mejor que localStorage en claro); transporte con cabecera `x-omni-config` resuelta por request (cambiar modelo/clave no rompe el chat en curso); Ollama/custom usan `.chat()` explícito.
+- Archivos nuevos: src/lib/{types,tokens,header-codec}.ts, src/lib/ai/{catalog,messages}.ts, src/lib/crypto/secret-box.ts, src/lib/db/{local-db,conversations,secrets}.ts, src/lib/store/use-settings-store.ts, src/app/api/chat/route.ts, src/components/chat/{code-block,markdown-renderer,token-badge,chat-message,chat-input,chat-box,model-selector,history-sidebar}.tsx, src/components/studio/{studio-header,studio-shell}.tsx, src/components/settings/api-key-modal.tsx; editados layout.tsx, globals.css, page.tsx.
