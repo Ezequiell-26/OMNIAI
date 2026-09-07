@@ -10,19 +10,33 @@ This is the first document to update at the end of every meaningful AI coding se
 
 **Core version:** `1.1.0`
 
-**Current main HEAD when this handoff was created:** `30f596fc16a55a90ed5a5daf30f4eb80f8090e03`
+**Current main HEAD when this handoff was created:** `29e7246ae8f50874cb926d347ac0ddcb4d6716cd`
 
-**What was just established:** persistent project memory for multi-AI development. The repository now has `AGENTS.md`, canonical project context/state, durable architectural decisions and this continuation protocol.
+**What was just established:** permanent multi-AI engineering policy covering main-only integration, professional open-source research, MIT preference for equivalent source reuse, current upstream verification, license discipline, evidence-based completion and persistent project memory.
 
 ## What the next AI should do first
 
 1. Read `AGENTS.md`.
 2. Read `docs/ai/PROJECT-CONTEXT.md`.
 3. Read `docs/ai/PROJECT-STATE.json`.
-4. Read this file and `docs/ai/DECISIONS.md`.
-5. Verify current `main` HEAD because this handoff may be stale if another AI has already committed.
-6. Inspect the requested feature's actual source before editing.
-7. Continue from the highest unfinished priority instead of restarting architecture.
+4. Read `docs/ai/DECISIONS.md`.
+5. Read `docs/ai/AI-ENGINEERING-STANDARD.md`.
+6. Read this file.
+7. Verify current `main` HEAD because this handoff may be stale if another AI has already committed.
+8. Inspect the requested feature's actual source and tests.
+9. Continue from the highest unfinished priority instead of restarting architecture.
+
+## Permanent rules
+
+- Final product work ends in `main`.
+- `web` and `windows-app` are historical/experimental source material, not product sources of truth.
+- One logical brain: `src/lib/core`.
+- Prefer production-grade, actively maintained, well-tested and well-documented open-source references.
+- Prefer MIT when an equivalent source implementation is suitable for reuse.
+- Verify current upstream API/license data for changing dependencies.
+- Prefer reimplementation over indiscriminate vendoring.
+- Record any real third-party source incorporation in `THIRD-PARTY-NOTICES.md`.
+- Never call a feature DONE without implementation evidence appropriate to the capability.
 
 ## Exact engineering continuation point
 
@@ -30,7 +44,7 @@ The immediate next extension point is:
 
 **durable run/event persistence + live event streaming + concrete execution adapters**, while keeping the existing provider-neutral Core boundary.
 
-After that, continue with transactional ChangeSets, incremental indexing, provider adapters/fallback, self-healing, multi-agent scheduling, and full Web/Windows Core integration.
+After that, continue with transactional ChangeSets, incremental indexing, production provider adapters/fallback, self-healing, multi-agent scheduling, and full Web/Windows Core integration.
 
 ## Current reality check
 
@@ -43,15 +57,17 @@ The `AgentExecutionEngine` can perform a bounded model/tool/result iteration, bu
 At the end of each session, record:
 
 - Core version;
-- exact commit/HEAD;
+- exact `main` HEAD;
+- goal;
 - files changed;
-- behavior added/changed;
+- behavior changed;
 - tests run and results;
 - security implications;
-- known issues;
-- blocked dependencies;
+- known issues/blockers;
+- open-source references used;
+- license checks performed;
 - next extension point;
-- whether docs/state were synchronized.
+- whether persistent docs were synchronized.
 
 ## Handoff template for future sessions
 
@@ -68,6 +84,8 @@ Copy this section for a new session entry instead of deleting historical informa
 - Behavior changed:
 - Tests/verification:
 - Security notes:
+- Open-source references:
+- License checks:
 - Known issues:
 - Blocked:
 - Next extension point:
@@ -76,10 +94,10 @@ Copy this section for a new session entry instead of deleting historical informa
 
 ## Historical handoff
 
-### 2026-09-08 — persistent-memory foundation
+### 2026-09-08 — persistent-memory + AI engineering standard
 
 - Core version: 1.1.0
-- Main HEAD at handoff creation: `30f596fc16a55a90ed5a5daf30f4eb80f8090e03`
-- Goal: make future GPT/AI sessions capable of continuing the project from Git alone.
-- Implemented: AI entrypoint, canonical context, machine-readable state, durable decisions, handoff protocol.
-- Next extension point: durable run/event persistence and live execution adapter integration.
+- Main HEAD: `29e7246ae8f50874cb926d347ac0ddcb4d6716cd`
+- Goal: make independent GPT/AI sessions able to improve OMNIAI continuously from Git alone.
+- Implemented: main-only product rule, permanent AI entrypoint, persistent context/state/decisions/handoff, professional open-source research standard, license discipline and CI enforcement of the AI context rules.
+- Next extension point: durable run/event persistence + live streaming + concrete execution adapters.
