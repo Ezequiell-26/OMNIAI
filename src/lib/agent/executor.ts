@@ -3,6 +3,7 @@ import {
   RunManager,
   type AIMessage,
   type AIRequest,
+  type AgentEvent,
   type AgentRunRecord,
   type ToolExecutionContext,
 } from '../core';
@@ -20,6 +21,7 @@ export interface AgentExecutionInput {
   maxTurns?: number;
   signal?: AbortSignal;
   requestApproval: ToolExecutionContext['requestApproval'];
+  emit?: (event: AgentEvent) => void;
 }
 
 export interface AgentExecutionResult {
@@ -71,6 +73,7 @@ export class AgentExecutionEngine {
       try {
         response = await this.gateway.generate(request);
         if (response.usage) await this.runs.updateUsage(input.runId, response.usage);
+        input.emit?.({ type: 'agent.thinking', taskId: input.taskId, runId: input.runId, agentId: input.agentId, ts: new Date().toISOString() });
       } catch (error) {
         const detail = error instanceof Error ? error.message : 'Provider error';
         await this.runs.recordError(input.runId, {
@@ -86,11 +89,13 @@ export class AgentExecutionEngine {
       if (response.text) {
         finalText += response.text;
         messages.push({ role: 'assistant', content: response.text });
+        input.emit?.({ type: 'agent.message', taskId: input.taskId, runId: input.runId, agentId: input.agentId, detail: response.text, ts: new Date().toISOString() });
       }
 
       if (!response.toolCalls.length) {
         await this.runs.result(input.runId, finalText);
         await this.runs.setStatus(input.runId, 'completed');
+        input.emit?.({ type: 'run.completed', taskId: input.taskId, runId: input.runId, ts: new Date().toISOString() });
         return { run: (await this.runs.get(input.runId))!, messages, finalText, turns };
       }
 
@@ -105,7 +110,7 @@ export class AgentExecutionEngine {
           agentId: input.agentId,
           signal: input.signal,
           requestApproval: input.requestApproval,
-          emit: (event) => undefined,
+          emit: (event) => input.emit?.(event),
         };
 
         try {
