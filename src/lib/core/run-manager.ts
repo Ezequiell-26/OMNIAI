@@ -109,11 +109,11 @@ export class RunManager {
 
   async updateUsage(runId: string, usage: Partial<RunUsage>): Promise<AgentRunRecord> {
     const run = await this.require(runId);
-    run.usage = {
-      ...run.usage,
-      ...usage,
-      totalTokens: usage.totalTokens ?? ((usage.inputTokens ?? 0) + (usage.outputTokens ?? 0)) || run.usage.totalTokens,
-    };
+    const previous = run.usage;
+    const inputTokens = usage.inputTokens ?? previous.inputTokens;
+    const outputTokens = usage.outputTokens ?? previous.outputTokens;
+    const totalTokens = usage.totalTokens ?? (inputTokens !== undefined && outputTokens !== undefined ? inputTokens + outputTokens : previous.totalTokens);
+    run.usage = { ...previous, ...usage, ...(totalTokens !== undefined ? { totalTokens } : {}) };
     await this.persistence.save(run);
     this.emit?.({ type: 'run.updated', taskId: run.taskId, runId, ts: now() });
     return run;
@@ -129,11 +129,11 @@ export class RunManager {
     return run;
   }
 
-  async recordFileChange(runId: string, path: string): Promise<AgentRunRecord> {
+  async recordFileChange(runId: string, path: string, action: 'created' | 'modified' | 'deleted' = 'modified'): Promise<AgentRunRecord> {
     const run = await this.require(runId);
     if (!run.filesChanged.includes(path)) run.filesChanged.push(path);
     await this.persistence.save(run);
-    this.emit?.({ type: 'file.changed', taskId: run.taskId, runId, path, action: 'modified', ts: now() });
+    this.emit?.({ type: 'file.changed', taskId: run.taskId, runId, path, action, ts: now() });
     return run;
   }
 
