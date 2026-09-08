@@ -5,7 +5,7 @@
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "d45c4e4369fbed0aa72eca237945cced43339ca1",
+  "lastKnownMainHead": "9bf7e47436ff15845e05af7321afb88d6a5d68b0",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
@@ -44,6 +44,7 @@
     "boundedAgentExecutionLoop": true,
     "toolSafetyDefaults": true,
     "toolTimeouts": true,
+    "transactionalChangeSet": true,
     "architectureGuard": true,
     "coreTests": true,
     "persistentAIMemory": true,
@@ -54,7 +55,7 @@
     "eventBus": "typed in Core; full durable event store and surface streaming still pending",
     "persistence": "RunPersistence port + in-memory implementation; application DB adapter pending",
     "projectIndexer": "context ranking exists; incremental indexer pending",
-    "diffEngine": "existing file diff exists; transactional multi-file ChangeSet pending",
+    "diffEngine": "ChangeSet now supports multi-file hashes, conflict detection and rollback; integration with pending-edit UI still pending",
     "git": "portable adapter contract exists; real adapter/end-to-end UI wiring pending",
     "terminal": "portable adapter contract exists; secure platform implementation pending",
     "testRunner": "portable adapter contract exists; platform implementation pending",
@@ -67,7 +68,7 @@
       "durable run/event persistence",
       "real streaming and cancellation",
       "secure workspace/Git/terminal/test adapters",
-      "transactional ChangeSet with hashes/conflicts/rollback"
+      "integrate ChangeSet with workspace pending edits and apply flows"
     ],
     "P1": [
       "incremental project indexer",
@@ -103,9 +104,9 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "mainHead": "d45c4e4369fbed0aa72eca237945cced43339ca1",
-    "change": "Hardened ToolRegistry defaults: read-only file tools no longer require approval by default; mutating capabilities remain approval-gated; tool timeouts propagate cancellation signals; regression coverage added and wired into the core test command.",
-    "nextExtensionPoint": "Connect durable persistence/event streaming and concrete execution adapters without moving business logic into Web/Windows.",
+    "mainHead": "9bf7e47436ff15845e05af7321afb88d6a5d68b0",
+    "change": "Added a Core transactional ChangeSet engine with content hashes, stale-workspace conflict detection, deterministic previews, multi-file application and best-effort rollback, with regression tests.",
+    "nextExtensionPoint": "Integrate ChangeSet into pending workspace edits, then connect durable persistence/event streaming and concrete execution adapters.",
     "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
 }
