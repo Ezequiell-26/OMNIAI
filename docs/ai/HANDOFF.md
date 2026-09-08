@@ -10,9 +10,9 @@ This is the first document to update at the end of every meaningful AI coding se
 
 **Core version:** `1.1.0`
 
-**Current main HEAD when this handoff was created:** `6fb5aa6f040aa5b7a6ac77563fbb5ba69e03bef7`
+**Current main HEAD when this handoff was created:** `31af43cff8c348b3db3263a2ef6de32c00184be6`
 
-**What was just established:** permanent multi-AI engineering policy covering main-only integration, professional open-source research, MIT preference for equivalent source reuse, current upstream verification, license discipline, evidence-based completion and persistent project memory. The AI context guard now validates these policies.
+**What was just established:** Core ToolRegistry safety defaults/timeouts and a transactional ChangeSet engine with content hashes, stale-workspace conflict detection, deterministic preview and best-effort rollback across multiple files. Regression tests cover the new safety and ChangeSet invariants.
 
 ## What the next AI should do first
 
@@ -42,15 +42,17 @@ This is the first document to update at the end of every meaningful AI coding se
 
 The immediate next extension point is:
 
-**durable run/event persistence + live event streaming + concrete execution adapters**, while keeping the existing provider-neutral Core boundary.
+**integrate ChangeSet with pending workspace edits and approval/application flows, then connect durable run/event persistence + live event streaming + concrete execution adapters.**
 
-After that, continue with transactional ChangeSets, incremental indexing, production provider adapters/fallback, self-healing, multi-agent scheduling, and full Web/Windows Core integration.
+After that, continue with incremental indexing, production provider adapters/fallback, self-healing, multi-agent scheduling, and full Web/Windows Core integration.
 
 ## Current reality check
 
 The repository has real Core foundations but not every final product capability is complete. In particular, do not confuse contracts/UI with end-to-end implementations.
 
 The `AgentExecutionEngine` can perform a bounded model/tool/result iteration, but full provider, platform adapters, durable application persistence and live surface integration remain work items.
+
+The Core `ChangeSet` is implemented and tested as an environment-neutral transaction planner/applicator, but it is not yet the authoritative mechanism used by the current browser pending-edit store.
 
 ## Session completion checklist
 
@@ -93,6 +95,20 @@ Copy this section for a new session entry instead of deleting historical informa
 ```
 
 ## Historical handoff
+
+### 2026-09-08 — transactional ChangeSet and tool safety
+
+- Core version: 1.1.0
+- Main HEAD: `31af43cff8c348b3db3263a2ef6de32c00184be6`
+- Goal: harden agent-side tool execution and make file changes explicit, reviewable and conflict-safe.
+- Implemented: read-only tools allowed by default; mutating permissions remain approval-gated; tool timeouts propagate cancellation; Core ChangeSet supports multi-file before/after snapshots, SHA-256 hashes, conflict detection, preview and rollback on partial application failure; regression tests added.
+- Tests/verification: changes were committed to `main`; GitHub Actions quality workflow was triggered, but this session did not execute the test suite locally and does not claim a passing result until CI reports it.
+- Security notes: stale workspace edits are refused instead of silently overwritten; rollback is best-effort if an adapter fails after earlier writes.
+- Open-source references: no source code imported in this session.
+- License checks: no new third-party source imported.
+- Known issues: ChangeSet is not yet wired into the existing browser pending-edit store; durable persistence and live streaming remain pending.
+- Next extension point: integrate ChangeSet with pending workspace edits, then durable run/event persistence and concrete execution adapters.
+- Docs synchronized: yes.
 
 ### 2026-09-08 — permanent AI engineering brain
 
