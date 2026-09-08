@@ -116,13 +116,17 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground;
+    min-height: 100dvh;
   }
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
-   OmniAI Studio — estética oscura Vercel/Linear
+   OmniAI Studio — visual system + rendering performance
    ───────────────────────────────────────────────────────────────────────── */
 
 @layer base {
@@ -130,39 +134,37 @@
     color-scheme: dark;
   }
 
-  /* Tamaño de letra global configurable (Ajustes · Apariencia) */
-  html[data-omni-font="sm"] {
-    font-size: 14.5px;
-  }
-  html[data-omni-font="md"] {
-    font-size: 16px;
-  }
-  html[data-omni-font="lg"] {
-    font-size: 17.5px;
-  }
+  html[data-omni-font="sm"] { font-size: 14.5px; }
+  html[data-omni-font="md"] { font-size: 16px; }
+  html[data-omni-font="lg"] { font-size: 17.5px; }
 
-  /* Scrollbars finas y discretas */
   * {
     scrollbar-width: thin;
-    scrollbar-color: oklch(0.35 0 0 / 0.9) transparent;
+    scrollbar-color: oklch(0.35 0 0 / 0.8) transparent;
   }
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.35 0 0 / 0.9);
-    border-radius: 8px;
+    background: oklch(0.35 0 0 / 0.85);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.45 0 0 / 1);
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  ::-webkit-scrollbar-thumb:hover { background: oklch(0.45 0 0 / 0.95); }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  ::selection { background: oklch(0.78 0.08 255 / 0.22); }
+
+  :focus-visible {
+    outline: 2px solid oklch(0.72 0.12 255 / 0.8);
+    outline-offset: 2px;
   }
 
-  ::selection {
-    background: oklch(0.85 0 0 / 0.18);
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
   }
 
   kbd {
@@ -171,30 +173,81 @@
 }
 
 @layer utilities {
-  /* Tarjeta glassmorphism reutilizable */
+  /* Glass más ligero que blur-xl para reducir trabajo de composición. */
   .glass-card {
-    @apply border border-border/60 bg-card/60 backdrop-blur-xl;
+    @apply border border-border/60 bg-card/70 backdrop-blur-md;
+    box-shadow: 0 10px 30px -24px oklch(0 0 0 / 0.9), inset 0 1px 0 oklch(1 0 0 / 0.035);
   }
 
-  /* Rejilla sutil de fondo (hero / splash) — adaptada a tema claro */
+  /* Fondo ambiente: degradados estáticos, sin animación ni filtros. */
+  .omni-ambient {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(900px 480px at 100% -10%, oklch(0.34 0.12 255 / 0.14), transparent 65%),
+      radial-gradient(700px 420px at -10% 70%, oklch(0.28 0.09 290 / 0.10), transparent 68%),
+      var(--background);
+  }
+
+  .omni-surface {
+    border: 1px solid oklch(1 0 0 / 0.055);
+    background: linear-gradient(180deg, oklch(1 0 0 / 0.025), transparent 18%), oklch(0.18 0 0 / 0.45);
+  }
+
+  .omni-interactive {
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+  }
+
+  /* Permite al navegador saltarse layout/pintado de contenido lejano. */
+  .omni-content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 720px;
+  }
+
+  .omni-panel-scroll {
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+
   .bg-grid {
     background-image:
-      linear-gradient(to right, oklch(0 0 0 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(0 0 0 / 0.05) 1px, transparent 1px);
+      linear-gradient(to right, oklch(1 0 0 / 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(1 0 0 / 0.035) 1px, transparent 1px);
     background-size: 32px 32px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
+    mask-image: radial-gradient(ellipse 80% 62% at 50% 40%, black 38%, transparent 100%);
   }
 }
 
-/* Tema claro: rejilla menos visible y scrollbars coherentes */
+/* Tema claro */
 .light .bg-grid {
   background-image:
     linear-gradient(to right, oklch(0 0 0 / 0.045) 1px, transparent 1px),
     linear-gradient(to bottom, oklch(0 0 0 / 0.045) 1px, transparent 1px);
 }
-.light * {
-  scrollbar-color: oklch(0.6 0 0 / 0.5) transparent;
+.light * { scrollbar-color: oklch(0.6 0 0 / 0.5) transparent; }
+.light ::-webkit-scrollbar-thumb { background: oklch(0.6 0 0 / 0.5); }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
-.light ::-webkit-scrollbar-thumb {
-  background: oklch(0.6 0 0 / 0.5);
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-card {
+    backdrop-filter: none;
+    background: var(--card);
+  }
+}
+
+@media (max-width: 767px) {
+  .bg-grid {
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 120% 70% at 50% 36%, black 36%, transparent 100%);
+  }
 }
