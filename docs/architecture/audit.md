@@ -15,8 +15,9 @@
 - Model Router con políticas cloud/private/local.
 - Project Context Engine y ranking de archivos.
 - Interfaces portables para Git, terminal y tests.
-- Tool Registry con validación y permisos.
+- Tool Registry con validación, permisos y timeouts.
 - Workspace y Diff Engine existentes con aprobación para cambios.
+- ChangeSet Core con hashes, conflictos y rollback.
 - Backups previos a la unificación de ramas.
 - Guardas de arquitectura y CI.
 
@@ -26,7 +27,7 @@
 2. La persistencia del RunManager todavía depende de adapters; falta una implementación integrada con la persistencia real de la aplicación.
 3. Git, terminal y TestRunner tienen contratos portables, pero aún falta conectar adapters reales por plataforma.
 4. El Project Context Engine necesita un indexador incremental real sobre el workspace.
-5. El Diff Engine debe evolucionar a ChangeSet multiarchivo con hashes y rollback transaccional.
+5. ChangeSet ya existe en Core; falta integrarlo con los pending edits/workspace actuales y con el flujo de aprobación/aplicación de UI.
 6. Web y Windows deben consumir activamente el Core en vez de conservar lógica de dominio duplicada.
 7. MCP, Knowledge/Memory, workflows y observabilidad avanzada necesitan integrarse al runtime real.
 8. `bun.lock` debe sincronizarse con la dependencia `diff` antes de volver a exigir `--frozen-lockfile` en CI.
@@ -37,6 +38,7 @@
 - Funcionalidades de Windows/Web que todavía no estén expresadas como adapters.
 - Integración de proveedores que vuelva a introducir acoplamiento en Agent Runtime.
 - Cambios grandes realizados por distintas IAs sin respetar Core contracts.
+- Aplicaciones ChangeSet deben ejecutarse bajo un adapter que serialice o controle escrituras si se requiere atomicidad fuerte frente a carreras externas.
 
 ## Regla de integración
 
@@ -45,10 +47,10 @@ No fusionar ramas mediante sobrescritura ciega. Comparar funcionalidad por funci
 ## Próximas prioridades
 
 ### P0
+- Integrar ChangeSet con pending edits y aprobación de workspace.
 - Runtime real con streaming + cancelación + persistencia.
 - Permission/approval event flow conectado a UI.
 - Adapter real de workspace, Git y terminal.
-- ChangeSet multiarchivo con conflicto por hash y rollback.
 
 ### P1
 - ProjectIndexer incremental.
