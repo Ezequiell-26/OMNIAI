@@ -6,3 +6,4 @@ export * from './permissions';
 export * from './ai-gateway';
 export * from './project-context';
 export * from './adapters';
+export * from './change-set';
