@@ -5,7 +5,7 @@
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "9bf7e47436ff15845e05af7321afb88d6a5d68b0",
+  "lastKnownMainHead": "9b190ba2cb3a10c164581ff0081cba55469c00eb",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
@@ -45,6 +45,8 @@
     "toolSafetyDefaults": true,
     "toolTimeouts": true,
     "transactionalChangeSet": true,
+    "studioVisualSystem": true,
+    "studioPerformanceCss": true,
     "architectureGuard": true,
     "coreTests": true,
     "persistentAIMemory": true,
@@ -61,14 +63,16 @@
     "testRunner": "portable adapter contract exists; platform implementation pending",
     "providers": "provider-neutral gateway exists; production adapter/fallback wiring pending",
     "multiAgent": "roles/starter orchestration exists; full scheduler pending",
-    "webWindows": "surfaces exist; complete shared-runtime migration pending"
+    "webWindows": "surfaces exist; complete shared-runtime migration pending",
+    "visual": "Studio visual system upgraded with lower-cost glass/transparency, ambient background, focus states, reduced-motion support and responsive treatment; deeper component-level visual migration remains"
   },
   "priorities": {
     "P0": [
       "durable run/event persistence",
       "real streaming and cancellation",
       "secure workspace/Git/terminal/test adapters",
-      "integrate ChangeSet with workspace pending edits and apply flows"
+      "integrate ChangeSet with workspace pending edits and apply flows",
+      "continue component-level visual/performance pass"
     ],
     "P1": [
       "incremental project indexer",
@@ -104,9 +108,9 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "mainHead": "9bf7e47436ff15845e05af7321afb88d6a5d68b0",
-    "change": "Added a Core transactional ChangeSet engine with content hashes, stale-workspace conflict detection, deterministic previews, multi-file application and best-effort rollback, with regression tests.",
-    "nextExtensionPoint": "Integrate ChangeSet into pending workspace edits, then connect durable persistence/event streaming and concrete execution adapters.",
+    "mainHead": "9b190ba2cb3a10c164581ff0081cba55469c00eb",
+    "change": "Upgraded the Studio visual system for a more premium AI-workspace feel while reducing composition cost: lighter backdrop blur, static ambient surfaces, stronger focus treatment, reduced-motion fallback, responsive grid tuning and polished header controls.",
+    "nextExtensionPoint": "Continue component-level visual/performance pass, then integrate ChangeSet with pending workspace edits and connect durable persistence/event streaming.",
     "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
 }
