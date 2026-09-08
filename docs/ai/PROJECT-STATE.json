@@ -5,7 +5,7 @@
   "canonicalBranch": "main",
   "coreVersion": "1.1.0",
   "state": "active-development",
-  "lastKnownMainHead": "9b190ba2cb3a10c164581ff0081cba55469c00eb",
+  "lastKnownMainHead": "2dae3f501764bf8dd43da45ce2135bcb2c8130a2",
   "truthRule": "Executable source and tests outrank this file; update this file when architecture/status changes.",
   "architecture": {
     "brain": "src/lib/core",
@@ -108,9 +108,9 @@
   ],
   "lastSession": {
     "date": "2026-09-08",
-    "mainHead": "9b190ba2cb3a10c164581ff0081cba55469c00eb",
-    "change": "Upgraded the Studio visual system for a more premium AI-workspace feel while reducing composition cost: lighter backdrop blur, static ambient surfaces, stronger focus treatment, reduced-motion fallback, responsive grid tuning and polished header controls.",
-    "nextExtensionPoint": "Continue component-level visual/performance pass, then integrate ChangeSet with pending workspace edits and connect durable persistence/event streaming.",
+    "mainHead": "2dae3f501764bf8dd43da45ce2135bcb2c8130a2",
+    "change": "Polished the Studio header and global visual system for a more premium AI-workspace feel, reduced visual composition cost, added responsive/reduced-motion treatment, and hardened the AI-context CI guard to be case-insensitive.",
+    "nextExtensionPoint": "Continue component-level visual/performance work, then integrate ChangeSet with pending workspace edits and connect durable persistence/event streaming.",
     "testsExpected": ["bun run verify:ai-context", "bun run verify:architecture", "bun run typecheck", "bun run test:core", "bun run lint", "bun run build"]
   }
 }
