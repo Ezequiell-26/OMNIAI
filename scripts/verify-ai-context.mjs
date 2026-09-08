@@ -71,7 +71,8 @@ for (const marker of ['Core', 'main', 'Web', 'Windows']) {
 }
 
 for (const source of [agents, contract]) {
-  if (!source.includes('main') || !source.includes('final') || !source.includes('commit')) {
+  const normalized = source.toLocaleLowerCase();
+  if (!normalized.includes('main') || !normalized.includes('final') || !normalized.includes('commit')) {
     console.error('AI context check failed. Main-only final commit policy is missing.');
     process.exit(1);
   }
