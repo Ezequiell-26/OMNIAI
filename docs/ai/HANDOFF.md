@@ -10,9 +10,9 @@ This is the first document to update at the end of every meaningful AI coding se
 
 **Core version:** `1.1.0`
 
-**Current main HEAD when this handoff was created:** `31af43cff8c348b3db3263a2ef6de32c00184be6`
+**Current main HEAD when this handoff was created:** `914bad6d0278044ee5c9f12b9fe2147cd9be2ec1`
 
-**What was just established:** Core ToolRegistry safety defaults/timeouts and a transactional ChangeSet engine with content hashes, stale-workspace conflict detection, deterministic preview and best-effort rollback across multiple files. Regression tests cover the new safety and ChangeSet invariants.
+**What was just established:** Core ToolRegistry safety defaults/timeouts, transactional ChangeSet support, and a Studio visual/performance pass with a polished header, lighter composition cost, static ambient surfaces, responsive/reduced-motion treatment, and a more resilient AI-context CI guard.
 
 ## What the next AI should do first
 
@@ -42,7 +42,7 @@ This is the first document to update at the end of every meaningful AI coding se
 
 The immediate next extension point is:
 
-**integrate ChangeSet with pending workspace edits and approval/application flows, then connect durable run/event persistence + live event streaming + concrete execution adapters.**
+**continue component-level visual/performance improvements, integrate ChangeSet with pending workspace edits and approval/application flows, then connect durable run/event persistence + live event streaming + concrete execution adapters.**
 
 After that, continue with incremental indexing, production provider adapters/fallback, self-healing, multi-agent scheduling, and full Web/Windows Core integration.
 
@@ -53,6 +53,8 @@ The repository has real Core foundations but not every final product capability 
 The `AgentExecutionEngine` can perform a bounded model/tool/result iteration, but full provider, platform adapters, durable application persistence and live surface integration remain work items.
 
 The Core `ChangeSet` is implemented and tested as an environment-neutral transaction planner/applicator, but it is not yet the authoritative mechanism used by the current browser pending-edit store.
+
+The Studio visual system has been upgraded globally, but deeper component-by-component visual migration and performance measurement remain pending.
 
 ## Session completion checklist
 
@@ -95,6 +97,20 @@ Copy this section for a new session entry instead of deleting historical informa
 ```
 
 ## Historical handoff
+
+### 2026-09-08 — Studio visual/performance pass
+
+- Core version: 1.1.0
+- Main HEAD: `914bad6d0278044ee5c9f12b9fe2147cd9be2ec1`
+- Goal: improve the complete Studio visual language and browser rendering efficiency without changing Core behavior.
+- Implemented: polished `StudioHeader`; lighter glass treatment; static ambient background; clearer focus-visible states; responsive grid tuning; reduced-motion support; reduced-transparency fallback; containment/content-visibility utilities; and performance-aware interaction transitions.
+- Tests/verification: Quality Gate run was checked; dependency installation succeeded. A CI context guard failure was identified as a case-sensitive string check, then the guard was corrected to normalize source text before validation. A new Quality Gate run was triggered for the fix.
+- Security notes: visual changes are presentation-only; no permission or Core execution boundary was weakened.
+- Open-source references: no source code imported in this session.
+- License checks: no new third-party source imported.
+- Known issues: deeper component-level UI migration, browser performance measurement, ChangeSet pending-edit integration and durable runtime work remain pending.
+- Next extension point: continue component-level visual/performance work, then integrate ChangeSet with pending workspace edits and durable runtime persistence/streaming.
+- Docs synchronized: yes.
 
 ### 2026-09-08 — transactional ChangeSet and tool safety
 
